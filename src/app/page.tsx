@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Footer } from "@/component/Footer";
 import { Hero } from "@/component/Hero";
 import MatchCard from "@/component/MatchCard";
-import { Navbar } from "@/component/Navbar";
 import { Pricing } from "@/component/Pricing";
 import { WorkUs } from "@/component/WorkUs";
 import { Button } from "@/components/ui/button";
@@ -19,7 +17,6 @@ export default function Home() {
   };
   return (
     <div className="m-1 p-1">
-      <Navbar />
       <Hero />
       <section className="p-5">
         <div className="container">
@@ -42,7 +39,6 @@ export default function Home() {
       </section>
       <Pricing />
       <WorkUs />
-      <Footer />
     </div>
   );
 }
