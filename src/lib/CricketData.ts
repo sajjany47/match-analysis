@@ -21,6 +21,17 @@ export interface Match {
   team2: Team;
   dateTime: DateTime;
   venue: string;
+  matchStatus: "Upcoming" | "Live" | "Completed"; // New field for match status
+  scoreCard?: {
+    team1Score: string;
+    team2Score: string;
+    result: string;
+  };
+  last10MatchReport?: {
+    team1Wins: number;
+    team2Wins: number;
+    draws: number;
+  };
 }
 
 export const MatchList = [
@@ -42,6 +53,7 @@ export const MatchList = [
       code: "AU",
     },
     dateTime: { local: "1st May, 2025 19:30", utc: "2025-05-01T14:00:00Z" },
+    matchStatus: "Upcoming",
     venue: "Eden Gardens, Kolkata",
   },
   {
@@ -61,6 +73,7 @@ export const MatchList = [
       code: "AU",
     },
     dateTime: { local: "2nd May, 2025 10:00", utc: "2025-05-02T04:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Lord's, London",
   },
   {
@@ -80,6 +93,7 @@ export const MatchList = [
       code: "LK",
     },
     dateTime: { local: "3rd May, 2025 14:00", utc: "2025-05-03T08:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Gaddafi Stadium, Lahore",
   },
   {
@@ -99,6 +113,7 @@ export const MatchList = [
       code: "AF",
     },
     dateTime: { local: "4th May, 2025 16:00", utc: "2025-05-04T10:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Sheikh Zayed Stadium, Abu Dhabi",
   },
   {
@@ -118,6 +133,7 @@ export const MatchList = [
       code: "NZ",
     },
     dateTime: { local: "5th May, 2025 09:30", utc: "2025-05-05T04:00:00Z" },
+    matchStatus: "Upcoming",
     venue: "Wankhede Stadium, Mumbai",
   },
 
@@ -139,6 +155,7 @@ export const MatchList = [
       code: "AR",
     },
     dateTime: { local: "6th May, 2025 20:00", utc: "2025-05-06T14:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Lusail Stadium, Qatar",
   },
   {
@@ -158,6 +175,7 @@ export const MatchList = [
       code: "RMA",
     },
     dateTime: { local: "7th May, 2025 21:00", utc: "2025-05-07T15:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Wembley Stadium, London",
   },
   {
@@ -177,6 +195,7 @@ export const MatchList = [
       code: "ATM",
     },
     dateTime: { local: "8th May, 2025 19:00", utc: "2025-05-08T13:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Camp Nou, Barcelona",
   },
   {
@@ -196,6 +215,7 @@ export const MatchList = [
       code: "ACM",
     },
     dateTime: { local: "9th May, 2025 18:00", utc: "2025-05-09T12:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Allianz Stadium, Turin",
   },
 
@@ -221,6 +241,7 @@ export const MatchList = [
       playerCode: "NDJOKO",
     },
     dateTime: { local: "10th May, 2025 14:00", utc: "2025-05-10T08:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Centre Court, London",
   },
   {
@@ -244,6 +265,7 @@ export const MatchList = [
       playerCode: "DMED",
     },
     dateTime: { local: "11th May, 2025 16:00", utc: "2025-05-11T10:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Rod Laver Arena, Melbourne",
   },
   {
@@ -267,6 +289,7 @@ export const MatchList = [
       playerCode: "AZVEREV",
     },
     dateTime: { local: "12th May, 2025 15:00", utc: "2025-05-12T09:30:00Z" },
+    matchStatus: "Upcoming",
     venue: "Arthur Ashe Stadium, New York",
   },
 
