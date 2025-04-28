@@ -92,7 +92,7 @@ const Navbar = ({
   },
 }: Navbar1Props) => {
   return (
-    <section className="py-4">
+    <section className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container">
         {/* Desktop Menu */}
         <nav className="hidden justify-between lg:flex">
