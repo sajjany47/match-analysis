@@ -19,8 +19,9 @@ const Pricing = () => {
           </h2>
           <div className="flex flex-col justify-between gap-10 md:flex-row">
             <p className="max-w-screen-md text-muted-foreground lg:text-xl">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat
-              odio, expedita neque ipsum pariatur suscipit!
+              Get the best AI-powered match predictions across Cricket,
+              Football, and Tennis. Choose the plan that suits your winning
+              journey!
             </p>
             <div className="flex h-11 w-fit shrink-0 items-center rounded-md bg-muted p-1 text-lg">
               <RadioGroup
@@ -59,44 +60,48 @@ const Pricing = () => {
               </RadioGroup>
             </div>
           </div>
+
           <div className="flex w-full flex-col items-stretch gap-6 md:flex-row">
+            {/* Free Plan */}
             <div className="flex w-full flex-col rounded-lg border p-6 text-left">
               <Badge className="mb-8 block w-fit">FREE</Badge>
-              <span className="text-4xl font-medium">$0</span>
+              <span className="text-4xl font-medium">₹0</span>
               <p className="invisible text-muted-foreground">Per month</p>
               <Separator className="my-6" />
               <div className="flex flex-col justify-between gap-20">
                 <ul className="space-y-4 text-muted-foreground">
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Unlimited Integrations</span>
+                    <span>Daily 1 Match Prediction</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Windows, Linux, Mac support</span>
+                    <span>Access to Basic Tips</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>24/7 Support</span>
+                    <span>Email Notifications</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Free updates</span>
+                    <span>Limited Support</span>
                   </li>
                 </ul>
                 <Button className="w-full">Get Started</Button>
               </div>
             </div>
+
+            {/* Pro Plan */}
             <div className="flex w-full flex-col rounded-lg border p-6 text-left">
               <Badge className="mb-8 block w-fit">PRO</Badge>
               {isAnnually ? (
                 <>
-                  <span className="text-4xl font-medium">$99</span>
+                  <span className="text-4xl font-medium">₹2,999</span>
                   <p className="text-muted-foreground">Per year</p>
                 </>
               ) : (
                 <>
-                  <span className="text-4xl font-medium">$9</span>
+                  <span className="text-4xl font-medium">₹299</span>
                   <p className="text-muted-foreground">Per month</p>
                 </>
               )}
@@ -105,30 +110,32 @@ const Pricing = () => {
                 <ul className="space-y-4 text-muted-foreground">
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Everything in FREE</span>
+                    <span>Daily 5+ Match Predictions</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Live call suport every month</span>
+                    <span>Premium Accuracy</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Unlimited Storage</span>
+                    <span>Priority Email Support</span>
                   </li>
                 </ul>
                 <Button className="w-full">Purchase</Button>
               </div>
             </div>
+
+            {/* Elite Plan */}
             <div className="flex w-full flex-col rounded-lg border bg-muted p-6 text-left">
-              <Badge className="mb-8 block w-fit">Elite</Badge>
+              <Badge className="mb-8 block w-fit">ELITE</Badge>
               {isAnnually ? (
                 <>
-                  <span className="text-4xl font-medium">$249</span>
+                  <span className="text-4xl font-medium">₹6,999</span>
                   <p className="text-muted-foreground">Per year</p>
                 </>
               ) : (
                 <>
-                  <span className="text-4xl font-medium">$9</span>
+                  <span className="text-4xl font-medium">₹699</span>
                   <p className="text-muted-foreground">Per month</p>
                 </>
               )}
@@ -137,19 +144,19 @@ const Pricing = () => {
                 <ul className="space-y-4 text-muted-foreground">
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Everything in PRO</span>
+                    <span>Unlimited Match Predictions</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Advanced analytics</span>
+                    <span>1-on-1 Consultation</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Custom branding</span>
+                    <span>Early Access to Tips</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4" />
-                    <span>Unlimited users</span>
+                    <span>24/7 Premium Support</span>
                   </li>
                 </ul>
                 <Button className="w-full">Purchase</Button>

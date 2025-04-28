@@ -1,10 +1,10 @@
 import {
-  BatteryCharging,
-  GitPullRequest,
-  Layers,
-  RadioTower,
-  SquareKanban,
-  WandSparkles,
+  BrainCircuit,
+  ShieldCheck,
+  Trophy,
+  LineChart,
+  ActivitySquare,
+  Bot,
 } from "lucide-react";
 
 interface Reason {
@@ -22,45 +22,45 @@ const WorkUs = ({
   heading = "Why Work With Us?",
   reasons = [
     {
-      title: "Quality",
+      title: "AI Match Predictions",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aliquid exercitationem, quos explicabo repellat?",
-      icon: <GitPullRequest className="size-6" />,
+        "Get highly accurate match predictions powered by advanced AI models trained on thousands of historical datasets across Cricket, Football, and Tennis.",
+      icon: <BrainCircuit className="size-6" />,
     },
     {
-      title: "Experience",
+      title: "Expert Insights",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aliquid exercitationem, quos explicabo repellat?",
-      icon: <SquareKanban className="size-6" />,
+        "Our panel of professional sports analysts and AI experts deliver deep insights to give you the competitive edge in every match.",
+      icon: <ShieldCheck className="size-6" />,
     },
     {
-      title: "Support",
+      title: "Winning Strategies",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aliquid exercitationem, quos explicabo repellat?",
-      icon: <RadioTower className="size-6" />,
+        "Access strategic predictions including player form, pitch reports, weather conditions, and live team updates for better forecasting.",
+      icon: <Trophy className="size-6" />,
     },
     {
-      title: "Innovation",
+      title: "Real-time Analytics",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aliquid exercitationem, quos explicabo repellat?",
-      icon: <WandSparkles className="size-6" />,
+        "Track live match data, win probability, score projections, and betting odds in real time — all powered by cutting-edge AI algorithms.",
+      icon: <LineChart className="size-6" />,
     },
     {
-      title: "Results",
+      title: "AI Chat Support",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aliquid exercitationem, quos explicabo repellat?",
-      icon: <Layers className="size-6" />,
+        "Get instant answers to your sports queries with our intelligent AI chat assistant, available 24/7 to support your prediction needs.",
+      icon: <Bot className="size-6" />,
     },
     {
-      title: "Efficiency",
+      title: "Performance Tracking",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aliquid exercitationem, quos explicabo repellat?",
-      icon: <BatteryCharging className="size-6" />,
+        "Analyze your past predictions, accuracy rates, and success metrics to continuously improve your prediction game over time.",
+      icon: <ActivitySquare className="size-6" />,
     },
   ],
 }: WorkUs) => {
   return (
-    <section className="p-3">
+    <section className="p-5">
       <div className="container">
         <div className="mb-10 md:mb-20">
           <h2 className="mb-2 text-center text-3xl font-semibold lg:text-5xl">

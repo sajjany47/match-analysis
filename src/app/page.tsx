@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Footer } from "@/component/Footer";
 import { Hero } from "@/component/Hero";

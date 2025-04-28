@@ -1,33 +1,34 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 const sections = [
   {
-    title: "Product",
+    title: "Sports",
     links: [
-      { name: "Overview", href: "#" },
-      { name: "Pricing", href: "#" },
-      { name: "Marketplace", href: "#" },
-      { name: "Features", href: "#" },
+      { name: "Cricket Predictions", href: "#" },
+      { name: "Tennis Predictions", href: "#" },
+      { name: "Football Predictions", href: "#" },
+      { name: "All Sports", href: "#" },
     ],
   },
   {
     title: "Company",
     links: [
-      { name: "About", href: "#" },
-      { name: "Team", href: "#" },
+      { name: "About Us", href: "#" },
+      { name: "Our Team", href: "#" },
       { name: "Blog", href: "#" },
       { name: "Careers", href: "#" },
     ],
   },
   {
-    title: "Resources",
+    title: "Support",
     links: [
-      { name: "Help", href: "#" },
-      { name: "Sales", href: "#" },
-      { name: "Advertise", href: "#" },
-      { name: "Privacy", href: "#" },
+      { name: "Help Center", href: "#" },
+      { name: "Contact Sales", href: "#" },
+      { name: "Advertise with Us", href: "#" },
+      { name: "Privacy Policy", href: "#" },
     ],
   },
 ];
@@ -46,11 +47,11 @@ export function Footer({
     url: "https://www.shadcnblocks.com",
     src: "https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg",
     alt: "Logo",
-    title: "Shadcnblocks.com",
+    title: "SportPredict",
   },
 }: FooterProps) {
   return (
-    <footer className="py-10 bg-muted mt-10">
+    <footer className="py-10 bg-muted mt-10 p-5">
       <div className="container">
         <div className="flex flex-col lg:flex-row justify-between gap-10 text-center lg:text-left">
           {/* Logo & Description */}
@@ -65,8 +66,9 @@ export function Footer({
               <h2 className="text-xl font-semibold">{logo.title}</h2>
             </a>
             <p className="text-sm text-muted-foreground">
-              A collection of 100+ responsive HTML templates for your startup
-              business or side project.
+              Unlock AI-powered predictions for Cricket, Tennis, and Football
+              matches. Get ahead with data-driven insights and winning
+              strategies.
             </p>
             {/* Social Links */}
             <div className="flex gap-4">
@@ -109,7 +111,7 @@ export function Footer({
 
         {/* Bottom Bar */}
         <div className="mt-10 flex flex-col md:flex-row justify-between items-center border-t pt-6 text-sm text-muted-foreground">
-          <p>© 2025 Shadcnblocks.com. All rights reserved.</p>
+          <p>© 2025 SportPredict. All rights reserved.</p>
           <div className="flex gap-4 mt-4 md:mt-0">
             <a href="#" className="hover:text-primary">
               Terms and Conditions
