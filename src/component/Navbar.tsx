@@ -63,7 +63,7 @@ const Navbar = ({
     { title: "Home", url: "#" },
     {
       title: "Matches",
-      url: "#",
+      url: "/matches",
       //   items: [
       //     {
       //       title: "Blog",
