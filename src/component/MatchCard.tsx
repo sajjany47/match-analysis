@@ -31,7 +31,7 @@ export default function MatchCard({ match }: MatchCardProps) {
 
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-      <Link href={`/match/${match._id}`} className="block">
+      <Link href={`/matches/${match._id}`} className="block">
         <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-border">
           <div className="bg-gradient-to-r from-green-800 to-green-600 p-3 text-white">
             <div className="flex justify-between items-center">

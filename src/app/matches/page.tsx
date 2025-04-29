@@ -115,9 +115,7 @@ const Matches = () => {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3 }}
                             >
-                              <Link href={`/match/${match._id}`}>
-                                <MatchCard match={match} />
-                              </Link>
+                              <MatchCard match={match} />
                             </motion.div>
                           ))
                         ) : (
