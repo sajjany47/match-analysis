@@ -34,8 +34,15 @@ const MatchDetails = () => {
     venue: {
       name: "Eden Gardens",
       city: "Kolkata",
+      country: "India",
       capacity: 68000,
       established: "1864",
+      pitchType: "Spin-friendly",
+      matchesWonBattingFirst: 32,
+      matchesWonBattingSecond: 28,
+      averageFirstInningsScore: 165,
+      highestTeamTotal: "210/4",
+      lowestTeamTotal: "85/10",
     },
     last10Matches: [
       {
@@ -121,6 +128,9 @@ const MatchDetails = () => {
     },
   };
 
+  const totalMatches =
+    venue.matchesWonBattingFirst + venue.matchesWonBattingSecond;
+
   return (
     <div className="container mx-auto py-8 px-4 max-w-7xl">
       {/* Match Header */}
@@ -150,7 +160,9 @@ const MatchDetails = () => {
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Location:</span>
-              <span className="font-medium">{venue.city}</span>
+              <span className="font-medium">
+                {venue.city}, {venue.country}
+              </span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Capacity:</span>
@@ -406,6 +418,44 @@ const MatchDetails = () => {
                     (venueStats.team2Wins / venueStats.encounters) * 100
                   )}
                   %)
+                </p>
+              </div>
+
+              {/* Ground Analysis Section */}
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold mb-2">Ground Analysis</h3>
+                <p className="text-muted-foreground">
+                  {venue.name} in {venue.city}, {venue.country} is known for its{" "}
+                  {venue.pitchType.toLowerCase()} pitches. Teams batting first
+                  have won {venue.matchesWonBattingFirst} matches (
+                  {(
+                    (venue.matchesWonBattingFirst / totalMatches) *
+                    100
+                  ).toFixed(1)}
+                  %) compared to {venue.matchesWonBattingSecond} wins (
+                  {(
+                    (venue.matchesWonBattingSecond / totalMatches) *
+                    100
+                  ).toFixed(1)}
+                  %) for teams batting second.
+                </p>
+
+                <p className="text-muted-foreground mt-2">
+                  The average first innings score is{" "}
+                  {venue.averageFirstInningsScore}, with the highest team total
+                  being {venue.highestTeamTotal}
+                  and the lowest being {venue.lowestTeamTotal}.
+                  {venue.matchesWonBattingFirst > venue.matchesWonBattingSecond
+                    ? " Historically, teams that win the toss prefer to bat first at this venue."
+                    : " Despite the statistics, teams have found more success when chasing at this venue."}
+                </p>
+
+                <p className="text-muted-foreground mt-2">
+                  {venue.pitchType === "Spin-friendly"
+                    ? "Spinners tend to dominate on this pitch, especially in the later stages of the match."
+                    : venue.pitchType === "Bouncy"
+                    ? "Fast bowlers get good assistance from the surface, with consistent bounce and carry."
+                    : "The pitch provides a fair balance between bat and ball throughout the match."}
                 </p>
               </div>
             </div>
