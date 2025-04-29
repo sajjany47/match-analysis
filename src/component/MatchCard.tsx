@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,7 +50,11 @@ export default function MatchCard({ match }: MatchCardProps) {
             <div className="flex justify-between items-center mb-4">
               <div className="flex flex-col items-center space-y-1 w-2/5">
                 <div className="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full">
-                  {"IND"}
+                  <img
+                    src={match.team1.logo}
+                    className="rounded-full w-12 h-12"
+                    alt={match.team1.name}
+                  />
                 </div>
                 <span className="text-sm font-medium">{match.team1.name}</span>
               </div>
@@ -62,7 +67,11 @@ export default function MatchCard({ match }: MatchCardProps) {
 
               <div className="flex flex-col items-center space-y-1 w-2/5">
                 <div className="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full">
-                  {"AUS"}
+                  <img
+                    src={match.team2.logo}
+                    className="rounded-full w-12 h-12"
+                    alt={match.team2.name}
+                  />
                 </div>
                 <span className="text-sm font-medium">{match.team2.name}</span>
               </div>
