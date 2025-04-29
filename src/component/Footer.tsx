@@ -51,7 +51,7 @@ export function Footer({
   },
 }: FooterProps) {
   return (
-    <footer className="py-10 bg-muted mt-10 p-5">
+    <footer className="py-10 bg-muted mt-20 p-5">
       <div className="container">
         <div className="flex flex-col lg:flex-row justify-between gap-10 text-center lg:text-left">
           {/* Logo & Description */}
