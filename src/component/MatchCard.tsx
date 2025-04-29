@@ -77,14 +77,9 @@ export default function MatchCard({ match }: MatchCardProps) {
               <div className="flex items-center">
                 <CalendarIcon className="w-4 h-4 mr-2" />
                 <span>
-                  {new Date(match.dateTime.local).toLocaleDateString("en-US", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {moment(match.dateTime.local, "Do MMM, YYYY HH:mm").format(
+                    "Do MMM, YYYY HH:mm A"
+                  )}
                 </span>
               </div>
             </div>
