@@ -2,6 +2,21 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  MapPin,
+  MessageSquare,
+  BarChart2,
+  Users,
+  Shield,
+  Trophy,
+  Calendar,
+  Cloud,
+  Flag,
+  Mic2,
+  Tv2,
+  Droplets,
+  Wind,
+} from "lucide-react";
 
 const MatchDetails = () => {
   const {
@@ -37,7 +52,6 @@ const MatchDetails = () => {
         score: "Pakistan 140/10 - SA 144/6",
         winner: "South Africa",
       },
-      // Added more matches for better demonstration
       {
         date: "2025-03-15",
         team1: "England",
@@ -129,21 +143,7 @@ const MatchDetails = () => {
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-xl font-bold flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
+              <MapPin className="w-5 h-5" />
               Venue Info
             </CardTitle>
           </CardHeader>
@@ -169,20 +169,7 @@ const MatchDetails = () => {
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-xl font-bold flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
+              <MessageSquare className="w-5 h-5" />
               Match Insights
             </CardTitle>
           </CardHeader>
@@ -208,20 +195,7 @@ const MatchDetails = () => {
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-xl font-bold flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-              </svg>
+              <BarChart2 className="w-5 h-5" />
               Head to Head
             </CardTitle>
           </CardHeader>
@@ -253,7 +227,8 @@ const MatchDetails = () => {
         {/* Last 10 matches at venue */}
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
           <CardHeader>
-            <CardTitle className="text-xl font-bold">
+            <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
               Recent Matches at {venue.name}
             </CardTitle>
           </CardHeader>
@@ -310,12 +285,14 @@ const MatchDetails = () => {
                 value="team1"
                 className="font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
+                <Users className="w-4 h-4 mr-2" />
                 {team1.name}
               </TabsTrigger>
               <TabsTrigger
                 value="team2"
                 className="font-semibold data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground"
               >
+                <Users className="w-4 h-4 mr-2" />
                 {team2.name}
               </TabsTrigger>
             </TabsList>
@@ -366,7 +343,8 @@ const MatchDetails = () => {
         {/* Venue Performance */}
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
           <CardHeader>
-            <CardTitle className="text-xl font-bold">
+            <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <Trophy className="w-5 h-5" />
               Performance at {venue.name}
             </CardTitle>
           </CardHeader>
@@ -437,25 +415,15 @@ const MatchDetails = () => {
         {/* Match Officials */}
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
           <CardHeader>
-            <CardTitle className="text-xl font-bold">Match Officials</CardTitle>
+            <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Match Officials
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start gap-4 p-3 bg-muted/50 rounded-lg">
               <div className="bg-primary/10 p-2 rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-5 h-5 text-primary"
-                >
-                  <path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                </svg>
+                <Flag className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold">Referee</h3>
@@ -465,20 +433,7 @@ const MatchDetails = () => {
 
             <div className="flex items-start gap-4 p-3 bg-muted/50 rounded-lg">
               <div className="bg-primary/10 p-2 rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-5 h-5 text-primary"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
+                <Mic2 className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold">Umpires</h3>
@@ -492,21 +447,7 @@ const MatchDetails = () => {
 
             <div className="flex items-start gap-4 p-3 bg-muted/50 rounded-lg">
               <div className="bg-primary/10 p-2 rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-5 h-5 text-primary"
-                >
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
+                <Tv2 className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold">TV Umpire</h3>
@@ -520,25 +461,43 @@ const MatchDetails = () => {
       {/* Weather Details */}
       <Card className="mt-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border-border">
         <CardHeader>
-          <CardTitle className="text-xl font-bold">
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <Cloud className="w-5 h-5" />
             Weather Conditions
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-muted/50 p-4 rounded-lg text-center">
+              <Cloud className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Summary</p>
               <p className="text-lg font-semibold">{weather.summary}</p>
             </div>
             <div className="bg-muted/50 p-4 rounded-lg text-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-6 h-6 mx-auto mb-2 text-muted-foreground"
+              >
+                <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+              </svg>
               <p className="text-sm text-muted-foreground">Temperature</p>
               <p className="text-lg font-semibold">{weather.temp}°C</p>
             </div>
             <div className="bg-muted/50 p-4 rounded-lg text-center">
+              <Droplets className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Humidity</p>
               <p className="text-lg font-semibold">{weather.humidity}</p>
             </div>
             <div className="bg-muted/50 p-4 rounded-lg text-center">
+              <Wind className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Wind Speed</p>
               <p className="text-lg font-semibold">{weather.wind}</p>
             </div>
