@@ -203,7 +203,7 @@ const MatchDetails = () => {
               </TabsTrigger>
               <TabsTrigger
                 value="team2"
-                className="font-semibold data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground"
+                className="font-semibold data-[state=active]:bg-blue-300 data-[state=active]:text-destructive-foreground"
               >
                 <Users className="w-4 h-4 mr-2" />
                 {data?.team2?.name}
@@ -236,7 +236,7 @@ const MatchDetails = () => {
                       key={i}
                       className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
                     >
-                      <p className="font-semibold text-destructive">
+                      <p className="font-semibold text-primary">
                         {player.name}
                       </p>
                       <p className="text-sm text-muted-foreground">
