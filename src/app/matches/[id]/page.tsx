@@ -17,132 +17,29 @@ import {
   Droplets,
   Wind,
 } from "lucide-react";
+import { useParams } from "next/navigation";
+import { MatchList } from "@/lib/CricketData";
 
 const MatchDetails = () => {
-  const {
-    venue,
-    last10Matches,
-    team1,
-    team2,
-    teamStats,
-    venueStats,
-    prediction,
-    averageScore,
-    weather,
-    officials,
-  } = {
-    venue: {
-      name: "Eden Gardens",
-      city: "Kolkata",
-      country: "India",
-      capacity: 68000,
-      established: "1864",
-      pitchType: "Spin-friendly",
-      matchesWonBattingFirst: 32,
-      matchesWonBattingSecond: 28,
-      averageFirstInningsScore: 165,
-      highestTeamTotal: "210/4",
-      lowestTeamTotal: "85/10",
-    },
-    last10Matches: [
-      {
-        date: "2025-04-20",
-        team1: "India",
-        team2: "Australia",
-        score: "India 170/8 - Australia 165/9",
-        winner: "India",
-      },
-      {
-        date: "2025-03-30",
-        team1: "Pakistan",
-        team2: "South Africa",
-        score: "Pakistan 140/10 - SA 144/6",
-        winner: "South Africa",
-      },
-      {
-        date: "2025-03-15",
-        team1: "England",
-        team2: "New Zealand",
-        score: "England 185/6 - NZ 180/7",
-        winner: "England",
-      },
-      {
-        date: "2025-03-05",
-        team1: "India",
-        team2: "South Africa",
-        score: "India 160/5 - SA 158/8",
-        winner: "India",
-      },
-      {
-        date: "2025-02-28",
-        team1: "Australia",
-        team2: "Pakistan",
-        score: "Australia 175/4 - Pakistan 170/9",
-        winner: "Australia",
-      },
-    ],
-    team1: {
-      name: "India",
-      squad: [
-        { name: "Rohit Sharma", role: "Batsman" },
-        { name: "Virat Kohli", role: "Batsman" },
-        { name: "Jasprit Bumrah", role: "Bowler" },
-        { name: "Hardik Pandya", role: "All-rounder" },
-        { name: "Ravindra Jadeja", role: "All-rounder" },
-        { name: "KL Rahul", role: "Wicketkeeper" },
-      ],
-    },
-    team2: {
-      name: "Australia",
-      squad: [
-        { name: "David Warner", role: "Batsman" },
-        { name: "Pat Cummins", role: "Bowler" },
-        { name: "Steve Smith", role: "All-rounder" },
-        { name: "Glenn Maxwell", role: "All-rounder" },
-        { name: "Mitchell Starc", role: "Bowler" },
-        { name: "Josh Hazlewood", role: "Bowler" },
-      ],
-    },
-    teamStats: {
-      team1Wins: 12,
-      team2Wins: 10,
-      ties: 1,
-    },
-    venueStats: {
-      encounters: 5,
-      team1Wins: 3,
-      team2Wins: 2,
-    },
-    prediction: "India has a 65% chance to win",
-    averageScore: 155,
-    weather: {
-      summary: "Clear skies",
-      temp: 32,
-      humidity: "45%",
-      wind: "12 km/h",
-    },
-    officials: {
-      referee: "Ranjan Madugalle",
-      umpires: ["Aleem Dar", "Marais Erasmus"],
-      tvUmpire: "Richard Kettleborough",
-    },
-  };
+  const params = useParams();
+  const data = MatchList.find((match) => match._id === Number(params.id));
 
   const totalMatches =
-    venue.matchesWonBattingFirst + venue.matchesWonBattingSecond;
+    (data?.venue?.matchesWonBattingFirst ?? 0) +
+    (data?.venue?.matchesWonBattingSecond ?? 0);
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-7xl">
       {/* Match Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 text-primary bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-          {team1.name} <span className="text-muted-foreground">vs</span>{" "}
-          {team2.name}
+          {data?.team1?.name} <span className="text-muted-foreground">vs</span>{" "}
+          {data?.team2?.name}
         </h1>
         <p className="text-lg sm:text-xl text-muted-foreground">
           Venue:{" "}
           <span className="font-semibold text-foreground">
-            {venue.name}, {venue.city}
+            {data?.venue?.name}, {data?.venue?.city}
           </span>
         </p>
       </div>
@@ -161,18 +58,18 @@ const MatchDetails = () => {
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Location:</span>
               <span className="font-medium">
-                {venue.city}, {venue.country}
+                {data?.venue?.city}, {data?.venue?.country}
               </span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Capacity:</span>
               <span className="font-medium">
-                {venue.capacity.toLocaleString()}
+                {data?.venue?.capacity?.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="text-muted-foreground">Established:</span>
-              <span className="font-medium">{venue.established}</span>
+              <span className="font-medium">{data?.venue?.established}</span>
             </div>
           </CardContent>
         </Card>
@@ -188,17 +85,19 @@ const MatchDetails = () => {
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Average Score:</span>
-              <span className="font-medium">{averageScore}</span>
+              <span className="font-medium">{data?.venue?.averageScore}</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Weather:</span>
               <span className="font-medium">
-                {weather.summary} ({weather.temp}°C)
+                {data?.weather?.summary} ({data?.weather?.temp}°C)
               </span>
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="text-muted-foreground">Prediction:</span>
-              <span className="font-medium text-primary">{prediction}</span>
+              <span className="font-medium text-primary">
+                {data?.prediction}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -215,19 +114,25 @@ const MatchDetails = () => {
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Total Matches:</span>
               <span className="font-medium">
-                {teamStats.team1Wins + teamStats.team2Wins + teamStats.ties}
+                {(data?.teamStats?.team1Wins ?? 0) +
+                  (data?.teamStats?.team2Wins ?? 0) +
+                  (data?.teamStats?.ties ?? 0)}
               </span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
-              <span className="text-muted-foreground">{team1.name} Wins:</span>
+              <span className="text-muted-foreground">
+                {data?.team1.name} Wins:
+              </span>
               <span className="font-medium text-green-500">
-                {teamStats.team1Wins}
+                {data?.teamStats?.team1Wins}
               </span>
             </div>
             <div className="flex justify-between items-center py-1">
-              <span className="text-muted-foreground">{team2.name} Wins:</span>
+              <span className="text-muted-foreground">
+                {data?.team2?.name} Wins:
+              </span>
               <span className="font-medium text-red-500">
-                {teamStats.team2Wins}
+                {data?.teamStats?.team2Wins}
               </span>
             </div>
           </CardContent>
@@ -241,35 +146,31 @@ const MatchDetails = () => {
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <Calendar className="w-5 h-5" />
-              Recent Matches at {venue.name}
+              Recent Matches at {data?.venue?.name}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-              {last10Matches.map((match, i) => (
+              {(data?.venue?.last10Matches ?? []).map((match, i) => (
                 <div
                   key={i}
                   className={`border p-4 rounded-md transition-colors ${
-                    match.winner === team1.name
+                    match.winner === data?.team1?.name
                       ? "bg-green-50 border-green-200 hover:bg-green-100"
-                      : match.winner === team2.name
+                      : match.winner === data?.team2?.name
                       ? "bg-red-50 border-red-200 hover:bg-red-100"
                       : "bg-muted hover:bg-muted/50 border-border"
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <p className="font-semibold text-sm sm:text-base">
-                      {new Date(match.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {data?.dateTime?.local}
                     </p>
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium ${
-                        match.winner === team1.name
+                        match.winner === data?.team1?.name
                           ? "bg-green-100 text-green-800"
-                          : match.winner === team2.name
+                          : match.winner === data?.team2?.name
                           ? "bg-red-100 text-red-800"
                           : "bg-gray-100 text-gray-800"
                       }`}
@@ -298,20 +199,20 @@ const MatchDetails = () => {
                 className="font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
                 <Users className="w-4 h-4 mr-2" />
-                {team1.name}
+                {data?.team1?.name}
               </TabsTrigger>
               <TabsTrigger
                 value="team2"
                 className="font-semibold data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground"
               >
                 <Users className="w-4 h-4 mr-2" />
-                {team2.name}
+                {data?.team2?.name}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="team1">
               <Card className="shadow-lg border-border">
                 <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {team1.squad.map((player, i) => (
+                  {(data?.team1?.squad ?? []).map((player, i) => (
                     <div
                       key={i}
                       className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
@@ -330,7 +231,7 @@ const MatchDetails = () => {
             <TabsContent value="team2">
               <Card className="shadow-lg border-border">
                 <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {team2.squad.map((player, i) => (
+                  {(data?.team2?.squad ?? []).map((player, i) => (
                     <div
                       key={i}
                       className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
@@ -357,7 +258,7 @@ const MatchDetails = () => {
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <Trophy className="w-5 h-5" />
-              Performance at {venue.name}
+              Performance at {data?.venue?.name}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -371,28 +272,32 @@ const MatchDetails = () => {
                   ></div>
                 </div>
                 <p className="text-right mt-1 text-sm text-muted-foreground">
-                  {venueStats.encounters} matches
+                  {data?.venue?.venueStats?.encounters} matches
                 </p>
               </div>
 
               <div>
                 <h3 className="font-medium mb-2">
-                  {team1.name} Wins at this venue:
+                  {data?.team1?.name} Wins at this venue:
                 </h3>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
                     className="bg-green-500 h-2.5 rounded-full"
                     style={{
                       width: `${
-                        (venueStats.team1Wins / venueStats.encounters) * 100
+                        ((data?.venue?.venueStats?.team1Wins ?? 0) /
+                          (data?.venue?.venueStats.encounters ?? 0)) *
+                        100
                       }%`,
                     }}
                   ></div>
                 </div>
                 <p className="text-right mt-1 text-sm text-muted-foreground">
-                  {venueStats.team1Wins} wins (
+                  {data?.venue?.venueStats?.team1Wins} wins (
                   {Math.round(
-                    (venueStats.team1Wins / venueStats.encounters) * 100
+                    ((data?.venue?.venueStats?.team1Wins ?? 0) /
+                      (data?.venue?.venueStats.encounters ?? 0)) *
+                      100
                   )}
                   %)
                 </p>
@@ -400,22 +305,26 @@ const MatchDetails = () => {
 
               <div>
                 <h3 className="font-medium mb-2">
-                  {team2.name} Wins at this venue:
+                  {data?.team2?.name} Wins at this venue:
                 </h3>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
                     className="bg-red-500 h-2.5 rounded-full"
                     style={{
                       width: `${
-                        (venueStats.team2Wins / venueStats.encounters) * 100
+                        ((data?.venue?.venueStats?.team2Wins ?? 0) /
+                          (data?.venue?.venueStats.encounters ?? 0)) *
+                        100
                       }%`,
                     }}
                   ></div>
                 </div>
                 <p className="text-right mt-1 text-sm text-muted-foreground">
-                  {venueStats.team2Wins} wins (
+                  {data?.venue?.venueStats?.team2Wins} wins (
                   {Math.round(
-                    (venueStats.team2Wins / venueStats.encounters) * 100
+                    ((data?.venue?.venueStats.team2Wins ?? 0) /
+                      (data?.venue?.venueStats.encounters ?? 0)) *
+                      100
                   )}
                   %)
                 </p>
@@ -425,16 +334,18 @@ const MatchDetails = () => {
               <div className="mt-6">
                 <h3 className="text-lg font-semibold mb-2">Ground Analysis</h3>
                 <p className="text-muted-foreground">
-                  {venue.name} in {venue.city}, {venue.country} is known for its{" "}
-                  {venue.pitchType.toLowerCase()} pitches. Teams batting first
-                  have won {venue.matchesWonBattingFirst} matches (
+                  {data?.venue?.name} in {data?.venue?.city},{" "}
+                  {data?.venue?.country} is known for its{" "}
+                  {data?.venue?.pitchType?.toLowerCase()} pitches. Teams batting
+                  first have won {data?.venue?.matchesWonBattingFirst} matches (
                   {(
-                    (venue.matchesWonBattingFirst / totalMatches) *
+                    ((data?.venue?.matchesWonBattingFirst ?? 0) /
+                      totalMatches) *
                     100
                   ).toFixed(1)}
-                  %) compared to {venue.matchesWonBattingSecond} wins (
+                  %) compared to {data?.venue?.matchesWonBattingSecond} wins (
                   {(
-                    (venue.matchesWonBattingSecond / totalMatches) *
+                    (data?.venue?.matchesWonBattingSecond ?? 0 / totalMatches) *
                     100
                   ).toFixed(1)}
                   %) for teams batting second.
@@ -442,18 +353,19 @@ const MatchDetails = () => {
 
                 <p className="text-muted-foreground mt-2">
                   The average first innings score is{" "}
-                  {venue.averageFirstInningsScore}, with the highest team total
-                  being {venue.highestTeamTotal}
-                  and the lowest being {venue.lowestTeamTotal}.
-                  {venue.matchesWonBattingFirst > venue.matchesWonBattingSecond
+                  {data?.venue?.averageFirstInningsScore}, with the highest team
+                  total being {data?.venue?.highestTeamTotal} and the lowest
+                  being {data?.venue?.lowestTeamTotal}.
+                  {data?.venue?.matchesWonBattingFirst ??
+                  0 > (data?.venue?.matchesWonBattingSecond ?? 0)
                     ? " Historically, teams that win the toss prefer to bat first at this venue."
                     : " Despite the statistics, teams have found more success when chasing at this venue."}
                 </p>
 
                 <p className="text-muted-foreground mt-2">
-                  {venue.pitchType === "Spin-friendly"
+                  {data?.venue?.pitchType === "Spin-friendly"
                     ? "Spinners tend to dominate on this pitch, especially in the later stages of the match."
-                    : venue.pitchType === "Bouncy"
+                    : data?.venue?.pitchType === "Bouncy"
                     ? "Fast bowlers get good assistance from the surface, with consistent bounce and carry."
                     : "The pitch provides a fair balance between bat and ball throughout the match."}
                 </p>
@@ -477,7 +389,9 @@ const MatchDetails = () => {
               </div>
               <div>
                 <h3 className="font-semibold">Referee</h3>
-                <p className="text-muted-foreground">{officials.referee}</p>
+                <p className="text-muted-foreground">
+                  {data?.officials.referee}
+                </p>
               </div>
             </div>
 
@@ -488,9 +402,8 @@ const MatchDetails = () => {
               <div>
                 <h3 className="font-semibold">Umpires</h3>
                 <ul className="text-muted-foreground list-disc list-inside">
-                  {officials.umpires.map((umpire, i) => (
-                    <li key={i}>{umpire}</li>
-                  ))}
+                  {data?.officials?.umpires ??
+                    [].map((umpire, i) => <li key={i}>{umpire}</li>)}
                 </ul>
               </div>
             </div>
@@ -501,7 +414,9 @@ const MatchDetails = () => {
               </div>
               <div>
                 <h3 className="font-semibold">TV Umpire</h3>
-                <p className="text-muted-foreground">{officials.tvUmpire}</p>
+                <p className="text-muted-foreground">
+                  {data?.officials?.tvUmpire}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -521,7 +436,7 @@ const MatchDetails = () => {
             <div className="bg-muted/50 p-4 rounded-lg text-center">
               <Cloud className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Summary</p>
-              <p className="text-lg font-semibold">{weather.summary}</p>
+              <p className="text-lg font-semibold">{data?.weather?.summary}</p>
             </div>
             <div className="bg-muted/50 p-4 rounded-lg text-center">
               <svg
@@ -539,17 +454,17 @@ const MatchDetails = () => {
                 <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
               </svg>
               <p className="text-sm text-muted-foreground">Temperature</p>
-              <p className="text-lg font-semibold">{weather.temp}°C</p>
+              <p className="text-lg font-semibold">{data?.weather?.temp}°C</p>
             </div>
             <div className="bg-muted/50 p-4 rounded-lg text-center">
               <Droplets className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Humidity</p>
-              <p className="text-lg font-semibold">{weather.humidity}</p>
+              <p className="text-lg font-semibold">{data?.weather?.humidity}</p>
             </div>
             <div className="bg-muted/50 p-4 rounded-lg text-center">
               <Wind className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Wind Speed</p>
-              <p className="text-lg font-semibold">{weather.wind}</p>
+              <p className="text-lg font-semibold">{data?.weather?.wind}</p>
             </div>
           </div>
         </CardContent>

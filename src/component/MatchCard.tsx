@@ -80,7 +80,9 @@ export default function MatchCard({ match }: MatchCardProps) {
             <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center">
                 <MapPinIcon className="w-4 h-4 mr-2" />
-                <span>{match.venue}</span>
+                <span>
+                  {match.venue.name}, {match.venue.city},{match.venue.country}
+                </span>
               </div>
 
               <div className="flex items-center">
