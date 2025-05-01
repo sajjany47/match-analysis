@@ -9,7 +9,7 @@ export async function GET() {
     console.log(data);
     const $ = cheerio.load(data);
 
-    const matches = [];
+    const matches: any = [];
     const today = moment().format("YYYY-MM-DD");
 
     $(".ds-px-4.ds-py-3 > a").each((_, element) => {
