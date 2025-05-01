@@ -5,14 +5,13 @@ import MatchCard from "@/component/MatchCard";
 import { Pricing } from "@/component/Pricing";
 import { WorkUs } from "@/component/WorkUs";
 import { Button } from "@/components/ui/button";
-import { MatchList } from "@/lib/CricketData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
 
-  const matchesToShow = MatchList.slice(0, 6); // Show only first 6 matches
+  // Show only first 6 matches
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -20,7 +19,7 @@ export default function Home() {
       try {
         const response = await fetch("/api/schedule");
         const data = await response.json();
-        setData(data);
+        setData(data.data);
       } catch (error) {
         console.error("Error fetching matches:", error);
       }
@@ -39,11 +38,11 @@ export default function Home() {
       <section className="p-5">
         <div className="container">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {matchesToShow.map((item: any) => (
+            {data.slice(0, 6).map((item: any) => (
               <MatchCard key={item._id} match={item} />
             ))}
           </div>
-          {MatchList.length > 6 && (
+          {data.length > 6 && (
             <div className="mt-6 text-center">
               <Button
                 onClick={handleViewMoreClick}
