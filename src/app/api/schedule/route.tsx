@@ -17,7 +17,38 @@ export async function GET(request: Request) {
         moment(date, "YYYY-MM-DD").format("YYYY-MM-DD")
     );
 
-    return Response.json({ data: filterMatches }, { status: 200 });
+    const prepareData = (filterMatches.match ?? []).map((item: any) => ({
+      _id: item.matchId,
+      seriesName: item.seriesname,
+      seriesCode: item.seriesShortName,
+      sport: "Cricket",
+      format: item.matchtype,
+      team1: {
+        id: item.teamaId,
+        name: item.teama,
+        logo: "https://flagcdn.com/w320/in.png",
+        code: item.teamaShort,
+      },
+      team2: {
+        id: item.teambId,
+        name: item.teamb,
+        logo: "https://flagcdn.com/w320/au.png",
+        code: item.teambShort,
+      },
+
+      dateTime: {
+        local: moment
+          .unix(item.match_start_datetime)
+          .format("Do MMM, YYYY HH:mm"),
+        utc: moment.unix(item.match_start_datetime),
+      },
+      matchStatus: "Upcoming",
+      venue: {
+        name: item.venue,
+      },
+    }));
+
+    return Response.json({ data: prepareData }, { status: 200 });
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 });
   }

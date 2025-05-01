@@ -7,14 +7,32 @@ import { WorkUs } from "@/component/WorkUs";
 import { Button } from "@/components/ui/button";
 import { MatchList } from "@/lib/CricketData";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+
   const matchesToShow = MatchList.slice(0, 6); // Show only first 6 matches
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const response = await fetch("/api/schedule");
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching matches:", error);
+      }
+    };
+
+    fetchMatches();
+  }, []);
 
   const handleViewMoreClick = () => {
     router.push("/match-list"); // Redirects to match list page
   };
+
   return (
     <div className="m-1 p-1">
       <Hero />
