@@ -1,38 +1,46 @@
-import * as cheerio from "cheerio";
+import { load } from "cheerio";
 import axios from "axios";
 import moment from "moment";
 
 export async function GET() {
-  const TARGET_URL = "https://www.espncricinfo.com/live-cricket-score";
+  const TARGET_URL =
+    "https://www.cricbuzz.com/cricket-schedule/upcoming-series/all";
   try {
     const { data } = await axios.get(TARGET_URL);
-    console.log(data);
-    const $ = cheerio.load(data);
+
+    const $ = load(data);
 
     const matches: any = [];
     const today = moment().format("YYYY-MM-DD");
 
-    $(".ds-px-4.ds-py-3 > a").each((_, element) => {
-      const matchTitle = $(element)
-        .find(".ds-text-tight-m")
-        .first()
-        .text()
-        .trim();
-      const teams = $(element)
-        .find(".ds-text-tight-s")
-        .map((i, el) => $(el).text())
-        .get()
-        .join(" vs ");
+    $("#all-list .cb-lv-grn-strip").each((_, dateElem) => {
+      const date = $(dateElem).text().trim();
+      const matchesList = $(dateElem).nextUntil(
+        ".cb-lv-grn-strip",
+        ".cb-col-100.cb-col"
+      );
 
-      const status = $(element)
-        .find(".ds-truncate.ds-text-typo-title")
-        .text()
-        .trim();
+      matchesList.each((_, matchElem) => {
+        const matchElemName = $(matchElem).find(".cb-mtchs-dy-vnu a").first();
+        const timeElem = $(matchElem)
+          .find(".cb-mtchs-dy-tm .cb-font-12.text-gray")
+          .first();
 
-      matches.push({
-        title: matchTitle || teams,
-        status: status || "Status not available",
-        source: "ESPN Cricinfo",
+        const matchName = matchElemName.text().trim();
+        const matchHref =
+          "https://www.cricbuzz.com" + matchElemName.attr("href")?.trim() || "";
+
+        const times = timeElem.text().replace(/\s+/g, " ").trim();
+        const [gmtTimeMatch, localTimeMatch] =
+          times.match(/(\d{1,2}:\d{2}\s[AP]M)/g) || [];
+
+        matches.push({
+          date,
+          matchName,
+          matchHref,
+          gmtTime: gmtTimeMatch || null,
+          localTime: localTimeMatch || null,
+        });
       });
     });
 
