@@ -25,6 +25,14 @@ export async function GET() {
         const timeElem = $(matchElem)
           .find(".cb-mtchs-dy-tm .cb-font-12.text-gray")
           .first();
+        const groundElem = $(matchElem)
+          .find('.cb-mtchs-dy-vnu [itemprop="location"] [itemprop="name"]')
+          .first();
+        const locationElem = $(matchElem)
+          .find(
+            '.cb-mtchs-dy-vnu [itemprop="location"] [itemprop="addressLocality"]'
+          )
+          .first();
 
         const matchName = matchElemName.text().trim();
         const matchHref =
@@ -33,11 +41,13 @@ export async function GET() {
         const times = timeElem.text().replace(/\s+/g, " ").trim();
         const [gmtTimeMatch, localTimeMatch] =
           times.match(/(\d{1,2}:\d{2}\s[AP]M)/g) || [];
-
+        const groundName = groundElem.text().replace(",", "").trim();
+        const location = locationElem.text().replace(",", "").trim();
         matches.push({
           date,
           matchName,
           matchHref,
+          ground: `${groundName}, ${location}`,
           gmtTime: gmtTimeMatch || null,
           localTime: localTimeMatch || null,
         });
