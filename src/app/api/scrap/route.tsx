@@ -1,11 +1,13 @@
 import { load } from "cheerio";
 import axios from "axios";
 import moment from "moment";
+import dbConnect from "@/lib/db";
 
 export async function GET() {
   const TARGET_URL =
     "https://www.cricbuzz.com/cricket-schedule/upcoming-series/all";
   try {
+    await dbConnect();
     const { data } = await axios.get(TARGET_URL);
 
     const $ = load(data);
