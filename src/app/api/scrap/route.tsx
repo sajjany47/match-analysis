@@ -55,8 +55,25 @@ export async function GET() {
         });
       });
     });
-
-    return Response.json({ date: today, matches });
+    const prepareData = matches.map((item: any) => {
+      const squadUrl = item.matchHref.replace(
+        "live-cricket-scores",
+        "cricket-match-squads"
+      );
+      const scoreCardUrl = item.matchHref.replace(
+        "live-cricket-scores",
+        "live-cricket-scorecard"
+      );
+      const matchFactUrl = item.matchHref.replace(
+        "live-cricket-scores",
+        "cricket-match-facts"
+      );
+      return { ...item, squadUrl, scoreCardUrl, matchFactUrl };
+    });
+    return Response.json(
+      { date: today, matches: prepareData },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Scraping failed" }, { status: 500 });
