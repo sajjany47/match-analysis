@@ -82,7 +82,6 @@ export async function GET() {
           team2Name: extractData.team2 || null,
           team1ShortName: extractData.team1ShortName,
           team2ShortName: extractData.team2ShortName || null,
-          date: "26th July,2025, 2:00 PM",
           team1Squad: [
             { name: "test1", hand: "Left", type: "Batsman", position: 1 },
           ],
