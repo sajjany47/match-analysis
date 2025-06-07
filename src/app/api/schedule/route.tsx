@@ -1,54 +1,53 @@
 import axios from "axios";
 import moment from "moment";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const date = searchParams.get("date") || moment().format("YYYY-MM-DD");
+    const body = await request.json();
+    const fromDate = body.fromDate
+      ? moment(body.fromDate).format("YYYY-MM-DD")
+      : moment().format("YYYY-MM-DD");
+    const toDate = body.toDate
+      ? moment(body.toDate).format("YYYY-MM-DD")
+      : moment().add(3, "days").format("YYYY-MM-DD");
 
-    const data = (
-      await axios.get(
-        "https://cricketnext.nw18.com/sports/csr/feed/schedule_by_date_en.json"
-      )
-    ).data;
-    const filterMatches = data.find(
-      (item: any) =>
-        moment(item.name, "ddd, MMM DD YYYY").format("YYYY-MM-DD") ===
-        moment(date, "YYYY-MM-DD").format("YYYY-MM-DD")
+    const encodeData = encodeURIComponent(
+      JSON.stringify({
+        filter: {
+          slug: "cricket",
+          collectionId: null,
+          dateRange: { fromDate: fromDate, toDate: toDate },
+          streamingFilter: "ALL",
+          isLive: false,
+          tours: [],
+          format: null,
+          gender: null,
+          matchType: null,
+          category: null,
+          direction: "BACKWARD",
+        },
+      })
     );
+    const extension = `%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%222b388699e2d6baf16f45bf237d62af88027b8ba298c873b8e3b9cf95037dbd2f%22%7D%7D`;
 
-    const prepareData = (filterMatches.match ?? []).map((item: any) => ({
-      _id: item.matchId,
-      seriesName: item.seriesname,
-      seriesCode: item.seriesShortName,
-      sport: "Cricket",
-      format: item.matchtype,
-      team1: {
-        id: item.teamaId,
-        name: item.teama,
-        logo: "https://flagcdn.com/w320/in.png",
-        code: item.teamaShort,
-      },
-      team2: {
-        id: item.teambId,
-        name: item.teamb,
-        logo: "https://flagcdn.com/w320/au.png",
-        code: item.teambShort,
-      },
+    const targetUrl = `https://www.fancode.com/graphql?extensions=${extension}&operation=query&operationName=FetchScheduleData&variables=${encodeData}`;
 
-      dateTime: {
-        local: moment
-          .unix(item.match_start_datetime)
-          .format("Do MMM, YYYY HH:mm"),
-        utc: moment.unix(item.match_start_datetime),
-      },
-      matchStatus: "Upcoming",
-      venue: {
-        name: item.venue,
-      },
-    }));
+    const data = await axios.get(targetUrl);
 
-    return Response.json({ data: prepareData }, { status: 200 });
+    // return new Response(data, {
+    //   status: 200,
+    //   headers: { "Content-Type": "text/html" },
+    // });
+
+    return Response.json(
+      {
+        data: data.data.data.fetchScheduleData.edges,
+        fromDate: fromDate,
+        toDate: toDate,
+        message: "Schedule fetched successfully",
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 });
   }
