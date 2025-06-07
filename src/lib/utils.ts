@@ -12,9 +12,9 @@ export const ExtractTeams = async (sentence: any) => {
 
   // Extract team names (split by 'vs' case-insensitive)
   const [team1, team2] = cleaned.split(/vs/i).map((s: any) => s.trim());
-  const tema1Details = await CountryDetails(team1);
-  const tema2Details = await CountryDetails(team2);
-  console.log(tema1Details);
+  const tema1Details: any = await CountryDetails(team1);
+  const tema2Details: any = await CountryDetails(team2);
+
   return {
     team1: team1,
     team2: team2,
@@ -28,17 +28,26 @@ export const ExtractTeams = async (sentence: any) => {
 };
 
 export const CountryDetails = async (countryName: string) => {
-  const cleanedCountryName = countryName
-    .toLowerCase()
-    .replace(/\b(women|xi|a)\b/gi, "")
-    .trim();
-  const details = await axios.get(
-    `https://restcountries.com/v3.1/name/${cleanedCountryName}`
-  );
+  try {
+    const cleanedCountryName = countryName
+      .toLowerCase()
+      .replace(/\b(women|xi|a)\b/gi, "")
+      .trim();
+    const details = await axios.get(
+      `https://restcountries.com/v3.1/name/${cleanedCountryName}`
+    );
 
-  return {
-    shortName: details.data[0].cioc || null,
-    flag: details.data[0].flags.svg || null,
-    name: details.data[0].name.common || null,
-  };
+    return {
+      shortName: details.data[0].cioc || null,
+      flag: details.data[0].flags.svg || null,
+      name: details.data[0].name.common || null,
+    };
+  } catch (error) {
+    console.error(`Error fetching country details for ${countryName}:`, error);
+    return {
+      shortName: null,
+      flag: null,
+      name: null,
+    };
+  }
 };

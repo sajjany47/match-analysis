@@ -56,47 +56,50 @@ export async function GET() {
         });
       });
     });
-    const prepareData = matches.map((item: any) => {
-      const squadUrl = item.matchHref.replace(
-        "live-cricket-scores",
-        "cricket-match-squads"
-      );
-      const scoreCardUrl = item.matchHref.replace(
-        "live-cricket-scores",
-        "live-cricket-scorecard"
-      );
-      const matchFactUrl = item.matchHref.replace(
-        "live-cricket-scores",
-        "cricket-match-facts"
-      );
-      const extractData: any = ExtractTeams(item.matchName);
+    const prepareData = await Promise.all(
+      matches.map(async (item: any) => {
+        const squadUrl = item.matchHref.replace(
+          "live-cricket-scores",
+          "cricket-match-squads"
+        );
+        const scoreCardUrl = item.matchHref.replace(
+          "live-cricket-scores",
+          "live-cricket-scorecard"
+        );
+        const matchFactUrl = item.matchHref.replace(
+          "live-cricket-scores",
+          "cricket-match-facts"
+        );
 
-      // return { ...item, squadUrl, scoreCardUrl, matchFactUrl };
-      return {
-        ...item,
-        squadUrl,
-        scoreCardUrl,
-        matchFactUrl,
-        team1Name: extractData.team1 || null,
-        team2Name: extractData.team2 || null,
-        team1ShortName: extractData.team1ShortName,
-        team2ShortName: extractData.team2ShortName || null,
-        date: "26th July,2025, 2:00 PM",
-        team1Squad: [
-          { name: "test1", hand: "Left", type: "Batsman", position: 1 },
-        ],
-        team2Squad: [
-          {
-            name: "test2",
-            hand: "Right",
-            type: "Bowling Allrounder",
-            position: 6,
-          },
-        ],
-        team1Flag: extractData.team1Flag,
-        team2Flag: extractData.team2Flag,
-      };
-    });
+        const extractData: any = await ExtractTeams(item.matchName);
+
+        return {
+          ...item,
+          squadUrl,
+          scoreCardUrl,
+          matchFactUrl,
+          team1Name: extractData.team1 || null,
+          team2Name: extractData.team2 || null,
+          team1ShortName: extractData.team1ShortName,
+          team2ShortName: extractData.team2ShortName || null,
+          date: "26th July,2025, 2:00 PM",
+          team1Squad: [
+            { name: "test1", hand: "Left", type: "Batsman", position: 1 },
+          ],
+          team2Squad: [
+            {
+              name: "test2",
+              hand: "Right",
+              type: "Bowling Allrounder",
+              position: 6,
+            },
+          ],
+          team1Flag: extractData.team1Flag,
+          team2Flag: extractData.team2Flag,
+        };
+      })
+    );
+
     return Response.json(
       { date: today, matches: prepareData },
       { status: 200 }
