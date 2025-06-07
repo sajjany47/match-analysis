@@ -2,6 +2,7 @@ import { load } from "cheerio";
 import axios from "axios";
 import moment from "moment";
 import dbConnect from "@/lib/db";
+import { ExtractTeams } from "@/lib/utils";
 
 export async function GET() {
   const TARGET_URL =
@@ -68,7 +69,33 @@ export async function GET() {
         "live-cricket-scores",
         "cricket-match-facts"
       );
-      return { ...item, squadUrl, scoreCardUrl, matchFactUrl };
+      const extractData: any = ExtractTeams(item.matchName);
+
+      // return { ...item, squadUrl, scoreCardUrl, matchFactUrl };
+      return {
+        ...item,
+        squadUrl,
+        scoreCardUrl,
+        matchFactUrl,
+        team1Name: extractData.team1 || null,
+        team2Name: extractData.team2 || null,
+        team1ShortName: extractData.team1ShortName,
+        team2ShortName: extractData.team2ShortName || null,
+        date: "26th July,2025, 2:00 PM",
+        team1Squad: [
+          { name: "test1", hand: "Left", type: "Batsman", position: 1 },
+        ],
+        team2Squad: [
+          {
+            name: "test2",
+            hand: "Right",
+            type: "Bowling Allrounder",
+            position: 6,
+          },
+        ],
+        team1Flag: extractData.team1Flag,
+        team2Flag: extractData.team2Flag,
+      };
     });
     return Response.json(
       { date: today, matches: prepareData },
