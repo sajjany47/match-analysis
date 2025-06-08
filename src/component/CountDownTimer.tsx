@@ -5,9 +5,13 @@ import { useEffect, useState } from "react";
 
 interface CountdownTimerProps {
   targetDate: string;
+  matchStatus: string; // Optional, if you want to handle match status
 }
 
-export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
+export default function CountdownTimer({
+  targetDate,
+  matchStatus,
+}: CountdownTimerProps) {
   console.log(targetDate);
   const calculateTimeLeft = () => {
     // const difference = new Date(targetDate).getTime() - new Date().getTime();
@@ -52,7 +56,7 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   if (timeLeft.isExpired) {
     return (
       <div className="text-center py-2 bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300 rounded-md">
-        Match in progress
+        {matchStatus}
       </div>
     );
   }

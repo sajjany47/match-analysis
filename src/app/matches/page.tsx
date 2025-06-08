@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MatchCard from "@/component/MatchCard";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -9,7 +9,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MatchList } from "@/lib/CricketData";
 import {
   CalendarIcon,
   Ticket as Cricket,
@@ -18,13 +17,42 @@ import {
 } from "lucide-react";
 import moment from "moment";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const Matches = () => {
   const [date, setDate] = useState<Date>(new Date());
-  const [selectedSport, setSelectedSport] = useState("Upcoming");
+  const [selectedSport, setSelectedSport] = useState("NOT_STARTED");
+  const [data, setData] = useState<any[]>([]);
 
-  const sports = ["Cricket", "Football", "Tennis"];
-  const statuses = ["Upcoming", "Live", "Completed"];
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const response = await axios.post(
+          "/api/schedule",
+          {},
+          { headers: { "Content-Type": "application/json" } }
+        );
+
+        setData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching matches:", error);
+      }
+    };
+
+    fetchMatches();
+  }, []);
+
+  const sports = [
+    { label: "Cricket", value: "cricket" },
+    { label: "Football", value: "football" },
+    { label: "Tennis", value: "tennis" },
+  ];
+
+  const statuses = [
+    { label: "Upcoming", value: "NOT_STARTED" },
+    { label: "Live", value: "LIVE" },
+    { label: "Completed", value: "COMPLETED" },
+  ];
 
   return (
     <section id="matches" className="py-16 px-4">
@@ -79,8 +107,8 @@ const Matches = () => {
           </TabsList>
 
           {/* TabsContent for each sport */}
-          {sports.map((sport) => (
-            <TabsContent key={sport} value={sport.toLowerCase()}>
+          {sports.map((sport: any, index) => (
+            <TabsContent key={index} value={sport.value}>
               <Tabs
                 value={selectedSport}
                 onValueChange={setSelectedSport}
@@ -88,23 +116,27 @@ const Matches = () => {
               >
                 {/* Status Tabs (Upcoming, Live, Completed) */}
                 <TabsList className="grid w-full grid-cols-3">
-                  {statuses.map((status) => (
-                    <TabsTrigger key={status} value={status}>
-                      {status}
+                  {statuses.map((status, ind) => (
+                    <TabsTrigger key={ind} value={status.value}>
+                      {status.label}
                     </TabsTrigger>
                   ))}
                 </TabsList>
 
                 {/* Matches by status */}
-                {statuses.map((status) => {
-                  const filteredMatches = MatchList.filter(
+                {statuses.map((status, elmInd) => {
+                  const filteredMatches = data.filter(
                     (match) =>
-                      match.sport.toLowerCase() === sport.toLowerCase() &&
-                      match.matchStatus === status
+                      match.sport.toLowerCase() === sport.value.toLowerCase() &&
+                      match.status === status.value
                   );
 
                   return (
-                    <TabsContent key={status} value={status} className="mt-6">
+                    <TabsContent
+                      key={elmInd}
+                      value={status.value}
+                      className="mt-6"
+                    >
                       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {filteredMatches.length > 0 ? (
                           filteredMatches.map((match) => (
@@ -119,7 +151,7 @@ const Matches = () => {
                           ))
                         ) : (
                           <div className="text-center text-muted-foreground w-full col-span-full">
-                            No {status} matches to display
+                            No {status.label} matches to display
                           </div>
                         )}
                       </div>
