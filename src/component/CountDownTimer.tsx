@@ -1,5 +1,6 @@
 "use client";
 
+import moment from "moment";
 import { useEffect, useState } from "react";
 
 interface CountdownTimerProps {
@@ -9,8 +10,12 @@ interface CountdownTimerProps {
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   console.log(targetDate);
   const calculateTimeLeft = () => {
-    const difference = new Date(targetDate).getTime() - new Date().getTime();
-
+    // const difference = new Date(targetDate).getTime() - new Date().getTime();
+    const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const givenDateTime = moment(targetDate, "Do MMM, YYYY HH:mm").format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
+    const difference = moment(givenDateTime).diff(moment(currentDateTime));
     if (difference <= 0) {
       return {
         days: 0,
@@ -20,12 +25,12 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
         isExpired: true,
       };
     }
-
+    const duration = moment.duration(difference);
     return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
+      days: Math.floor(duration.asDays()),
+      hours: duration.hours(),
+      minutes: duration.minutes(),
+      seconds: duration.seconds(),
       isExpired: false,
     };
   };

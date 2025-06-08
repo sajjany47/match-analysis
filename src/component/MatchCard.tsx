@@ -35,7 +35,9 @@ export default function MatchCard({ match }: MatchCardProps) {
         <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-border">
           <div className="bg-gradient-to-r from-green-800 to-green-600 p-3 text-white">
             <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-sm">{match.tour.name}</h3>
+              <h3 className="font-semibold text-sm">
+                {match.tour.name} ({match.format})
+              </h3>
               <span
                 className={`text-xs px-2 py-1 rounded-full ${getMatchTypeColor(
                   match.format

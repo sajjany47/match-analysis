@@ -44,7 +44,7 @@ export default function Home() {
         <div className="container">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
             {data.slice(0, 6).map((item: any) => (
-              <MatchCard key={item._id} match={item} />
+              <MatchCard key={item.matchId} match={item} />
             ))}
           </div>
           {data.length > 6 && (
