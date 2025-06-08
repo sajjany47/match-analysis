@@ -18,7 +18,7 @@ interface MatchCardProps {
 export default function MatchCard({ match }: MatchCardProps) {
   const getMatchTypeColor = (type: string) => {
     switch (type) {
-      case "T20":
+      case "T20I":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
       case "ODI":
         return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
@@ -31,11 +31,11 @@ export default function MatchCard({ match }: MatchCardProps) {
 
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-      <Link href={`/matches/${match._id}`} className="block">
+      <Link href={`/matches/${match.matchId}`} className="block">
         <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-border">
           <div className="bg-gradient-to-r from-green-800 to-green-600 p-3 text-white">
             <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-sm">{match.seriesName}</h3>
+              <h3 className="font-semibold text-sm">{match.tour.name}</h3>
               <span
                 className={`text-xs px-2 py-1 rounded-full ${getMatchTypeColor(
                   match.format
@@ -51,12 +51,14 @@ export default function MatchCard({ match }: MatchCardProps) {
               <div className="flex flex-col items-center space-y-1 w-2/5">
                 <div className="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full">
                   <img
-                    src={match.team1.logo}
+                    src={match.teams[0].teamFlagUrl}
                     className="rounded-full w-12 h-12"
-                    alt={match.team1.name}
+                    alt={match.teams[0].teamName}
                   />
                 </div>
-                <span className="text-sm font-medium">{match.team1.name}</span>
+                <span className="text-sm font-medium">
+                  {match.teams[0].teamName}
+                </span>
               </div>
 
               <div className="text-center">
@@ -68,39 +70,40 @@ export default function MatchCard({ match }: MatchCardProps) {
               <div className="flex flex-col items-center space-y-1 w-2/5">
                 <div className="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full">
                   <img
-                    src={match.team2.logo}
+                    src={match.teams[1].teamFlagUrl}
                     className="rounded-full w-12 h-12"
-                    alt={match.team2.name}
+                    alt={match.teams[0].teamName}
                   />
                 </div>
-                <span className="text-sm font-medium">{match.team2.name}</span>
+                <span className="text-sm font-medium">
+                  {match.teams[0].teamName}
+                </span>
               </div>
             </div>
 
             <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center">
                 <MapPinIcon className="w-4 h-4 mr-2" />
-                <span>
-                  {match.venue.name}, {match.venue.city},{match.venue.country}
-                </span>
+                <span>{match.venue}</span>
               </div>
 
               <div className="flex items-center">
                 <CalendarIcon className="w-4 h-4 mr-2" />
                 <span>
-                  {moment(match.dateTime.local, "Do MMM, YYYY HH:mm").format(
-                    "Do MMM, YYYY HH:mm A"
-                  )}
+                  {moment
+                    .utc(match.startTime)
+                    .local()
+                    .format("Do MMM, YYYY HH:mm A")}
                 </span>
               </div>
             </div>
 
             <div className="mt-4">
               <CountdownTimer
-                targetDate={moment(
-                  match.dateTime.local,
-                  "Do MMM, YYYY HH:mm"
-                ).toISOString()}
+                targetDate={moment
+                  .utc(match.startTime)
+                  .local()
+                  .format("Do MMM, YYYY HH:mm")}
               />
             </div>
 

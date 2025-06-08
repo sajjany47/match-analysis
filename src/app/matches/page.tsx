@@ -17,7 +17,6 @@ import {
   Tent as Tennis,
 } from "lucide-react";
 import moment from "moment";
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 const Matches = () => {

@@ -3,14 +3,14 @@ export interface SquadMember {
   role: string;
 }
 
-export interface Team {
-  name: string;
-  logo: string;
-  code: string;
-  playerName?: string;
-  playerCode?: string;
-  squad?: SquadMember[];
-}
+// export interface Team {
+//   name: string;
+//   logo: string;
+//   code: string;
+//   playerName?: string;
+//   playerCode?: string;
+//   squad?: SquadMember[];
+// }
 
 export interface ScoreCard {
   team1Score: string;
@@ -82,28 +82,32 @@ export interface DateTime {
   utc: string;
 }
 
-export interface Match {
-  _id: string | number;
-  seriesName: string;
-  seriesCode: string;
-  sport: "Cricket" | "Football" | "Tennis";
-  format: "T20" | "ODI" | "Test" | "T10" | "90-minutes" | "5-set";
-  team1: Team;
-  team2: Team;
-  dateTime: DateTime;
-  venue: Venue;
-  matchStatus: "Upcoming" | "Live" | "Completed";
-  scoreCard?: ScoreCard;
-  last10MatchReport?: Last10MatchReport;
-  teamStats: {
-    team1Wins: number;
-    team2Wins: number;
-    ties: number;
-  };
-  weather: Weather;
-  officials: Officials;
-  prediction: string;
-}
+export type Match = {
+  matchId: number;
+  matchName: string;
+  matchDescription: string;
+  startTime: string; // ISO date string
+  status: string;
+  venue: string;
+  tour: Tour;
+  format: string;
+  sport: string;
+  teams: Team[];
+};
+type Tour = {
+  id: number;
+  name: string;
+};
+type Team = {
+  squadId: number;
+  teamName: string;
+  teamShortName: string;
+  teamFlagUrl: string;
+  isWinner: boolean | null;
+  color: string;
+  cricketScore: number | null;
+  squadNo: number | null;
+};
 
 export const MatchList = [
   {

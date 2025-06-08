@@ -5,6 +5,7 @@ import MatchCard from "@/component/MatchCard";
 import { Pricing } from "@/component/Pricing";
 import { WorkUs } from "@/component/WorkUs";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -17,9 +18,13 @@ export default function Home() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch("/api/schedule");
-        const data = await response.json();
-        setData(data.data);
+        const response = await axios.post(
+          "/api/schedule",
+          {},
+          { headers: { "Content-Type": "application/json" } }
+        );
+        console.log(response.data);
+        setData(response.data.data);
       } catch (error) {
         console.error("Error fetching matches:", error);
       }

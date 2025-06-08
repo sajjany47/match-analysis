@@ -38,10 +38,38 @@ export async function POST(request: Request) {
     //   status: 200,
     //   headers: { "Content-Type": "text/html" },
     // });
+    const prepareData = (
+      data.data.data.fetchScheduleData.edges[0].tours ?? []
+    ).flatMap((item: any) =>
+      item.matches.map((match: any) => ({
+        tourId: item.id,
+        tourName: item.name,
+        matchId: match.id,
+        matchName: match.name,
+        matchDescription: match.matchDesc,
+        startTime: match.startTime,
+        endTime: match.endTime,
+        status: match.status,
+        venue: match.venue,
+        tour: match.tour,
+        format: match.format,
+        sport: match.sport.slug,
+        teams: match.squads.map((team: any) => ({
+          squadId: team.squadId,
+          teamName: team.name,
+          teamShortName: team.shortName,
+          teamFlagUrl: team.flag.src,
+          isWinner: team.isWinner,
+          color: team.color,
+          cricketScore: team.cricketScore,
+          squadNo: team.squadNo,
+        })),
+      }))
+    );
 
     return Response.json(
       {
-        data: data.data.data.fetchScheduleData.edges,
+        data: prepareData,
         fromDate: fromDate,
         toDate: toDate,
         message: "Schedule fetched successfully",
