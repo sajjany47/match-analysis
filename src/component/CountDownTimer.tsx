@@ -1,15 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import moment from "moment";
 import { useEffect, useState } from "react";
 
 interface CountdownTimerProps {
-  targetDate: Date | string; // Accepts Date object or string in "Do MMM, YYYY HH:mm" format
-  matchStatus: string; // Optional, if you want to handle match status
+  targetDate: string;
+  matchStatus?: string;
 }
 
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
-  console.log(targetDate);
   const calculateTimeLeft = () => {
     // const difference = new Date(targetDate).getTime() - new Date().getTime();
     const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -39,55 +39,41 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearTimeout(timer);
-  });
+    return () => clearInterval(timer);
+  }, [targetDate]);
 
   const formatTime = (value: number) => {
-    return value < 10 ? `0${value}` : value;
+    return value < 10 ? `0${value}` : value.toString();
   };
 
   if (timeLeft.isExpired) {
     return (
-      <div className="text-center py-2 bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300 rounded-md">
-        Match in progress
+      <div className="text-center py-2 bg-amber-100 text-amber-800 rounded-md text-sm font-medium">
+        Match starting soon!
       </div>
     );
   }
 
   return (
     <div className="flex justify-center">
-      <div className="grid grid-cols-4 gap-2 text-center">
-        <div className="flex flex-col">
-          <div className="bg-primary text-primary-foreground rounded-md py-1 px-2 text-lg font-bold">
-            {formatTime(timeLeft.days)}
+      <div className="grid grid-cols-4 gap-1 w-full">
+        {[
+          { value: timeLeft.days, label: "Days" },
+          { value: timeLeft.hours, label: "Hours" },
+          { value: timeLeft.minutes, label: "Mins" },
+          { value: timeLeft.seconds, label: "Secs" },
+        ].map((item, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <div className="bg-blue-600 text-white rounded-md py-1 px-2 w-full text-center text-sm font-bold">
+              {formatTime(item.value)}
+            </div>
+            <span className="text-xs text-gray-500 mt-1">{item.label}</span>
           </div>
-          <span className="text-xs mt-1">Days</span>
-        </div>
-
-        <div className="flex flex-col">
-          <div className="bg-primary text-primary-foreground rounded-md py-1 px-2 text-lg font-bold">
-            {formatTime(timeLeft.hours)}
-          </div>
-          <span className="text-xs mt-1">Hours</span>
-        </div>
-
-        <div className="flex flex-col">
-          <div className="bg-primary text-primary-foreground rounded-md py-1 px-2 text-lg font-bold">
-            {formatTime(timeLeft.minutes)}
-          </div>
-          <span className="text-xs mt-1">Mins</span>
-        </div>
-
-        <div className="flex flex-col">
-          <div className="bg-primary text-primary-foreground rounded-md py-1 px-2 text-lg font-bold">
-            {formatTime(timeLeft.seconds)}
-          </div>
-          <span className="text-xs mt-1">Secs</span>
-        </div>
+        ))}
       </div>
     </div>
   );

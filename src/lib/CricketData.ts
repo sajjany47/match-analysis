@@ -87,7 +87,7 @@ export type Match = {
   matchName: string;
   matchDescription: string;
   startTime: string; // ISO date string
-  matchStatus: "NOT_STARTED" | "LIVE" | "COMPLETED";
+  status: "NOT_STARTED" | "LIVE" | "COMPLETED";
   venue: string;
   tour: Tour;
   format: string;
