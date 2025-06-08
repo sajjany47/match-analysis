@@ -4,14 +4,11 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 
 interface CountdownTimerProps {
-  targetDate: string;
+  targetDate: Date | string; // Accepts Date object or string in "Do MMM, YYYY HH:mm" format
   matchStatus: string; // Optional, if you want to handle match status
 }
 
-export default function CountdownTimer({
-  targetDate,
-  matchStatus,
-}: CountdownTimerProps) {
+export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   console.log(targetDate);
   const calculateTimeLeft = () => {
     // const difference = new Date(targetDate).getTime() - new Date().getTime();
@@ -56,7 +53,7 @@ export default function CountdownTimer({
   if (timeLeft.isExpired) {
     return (
       <div className="text-center py-2 bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300 rounded-md">
-        {matchStatus}
+        Match in progress
       </div>
     );
   }

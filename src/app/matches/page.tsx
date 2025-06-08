@@ -18,6 +18,8 @@ import {
 import moment from "moment";
 import { motion } from "framer-motion";
 import axios from "axios";
+import LiveMatchCard from "@/component/LiveMatchCard";
+import CompletedMatchCard from "@/component/CompletedMatchCard";
 
 const Matches = () => {
   const [date, setDate] = useState<Date>(new Date());
@@ -146,7 +148,14 @@ const Matches = () => {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3 }}
                             >
-                              <MatchCard match={match} />
+                              {selectedSport === "NOT_STARTED" ? (
+                                <MatchCard match={match} />
+                              ) : selectedSport === "LIVE" ? (
+                                <LiveMatchCard match={match} />
+                              ) : (
+                                <CompletedMatchCard match={match} />
+                              )}
+                              {/* <MatchCard match={match} /> */}
                             </motion.div>
                           ))
                         ) : (

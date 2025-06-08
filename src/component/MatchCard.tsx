@@ -106,7 +106,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                   .utc(match.startTime)
                   .local()
                   .format("Do MMM, YYYY HH:mm")}
-                matchStatus={match.status}
+                matchStatus={match.matchStatus}
               />
             </div>
 
