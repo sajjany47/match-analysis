@@ -1,53 +1,32 @@
 import axios from "axios";
 import { NextRequest } from "next/server";
-import { load } from "cheerio";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const TARGET_URL = body.url;
 
-    const { data } = await axios.get(TARGET_URL);
-    const $ = load(data);
+    const payload = {
+      operationName: "Squads",
+      operation: "query",
+      variables: {
+        matchId: body.matchId,
+      },
+      query:
+        "fragment SquadPlayer on SquadPlayer {\n  id\n  name\n  shortName\n  batStyle\n  bowlStyle\n  imageUrl {\n    src\n  }\n  type\n}\n\nquery Squads($matchId: Int!) {\n  squadSegment(matchId: $matchId) {\n    flag {\n      src\n    }\n    color\n    shortName\n    playingPlayers {\n      ...SquadPlayer\n    }\n    benchPlayers {\n      ...SquadPlayer\n    }\n  }\n}\n        ",
+    };
 
-    const team1 = $(".cb-team1 .pad5").last().text().trim();
-    const team2 = $(".cb-team2 .pad5").last().text().trim();
-
-    const team1Squad: any = { team1: team1, team1Squad: [] };
-
-    const team2Squad: any = { team2: team2, team2Squad: [] };
-
-    $(".cb-sqds-lft-col .cb-player-card-left").each((i, elem) => {
-      const name = $(elem)
-        .find(".cb-player-name-left div")
-        .first()
-        .text()
-        .trim();
-      const role = $(elem)
-        .find(".cb-player-name-left .cb-font-12")
-        .text()
-        .trim();
-      const imageUrl = $(elem).find("img").attr("src");
-
-      team1Squad.team1Squad.push({ name, role, imageUrl });
-    });
-    $(".cb-sqds-lft-col .cb-player-card-right").each((i, elem) => {
-      const name = $(elem)
-        .find(".cb-player-name-right div")
-        .first()
-        .text()
-        .trim();
-      const role = $(elem)
-        .find(".cb-player-name-right .cb-font-12")
-        .text()
-        .trim();
-      const imageUrl = $(elem).find("img").attr("src");
-
-      team2Squad.team2Squad.push({ name, role, imageUrl });
-    });
+    const squadList = await axios.post(
+      "https://www.fancode.com/graphql",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return Response.json(
-      { data: [{ ...team1Squad }, { ...team2Squad }] },
+      { data: { squadList: squadList.data.data.squadSegment } },
       { status: 200 }
     );
   } catch (error: any) {

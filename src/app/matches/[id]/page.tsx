@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -18,12 +18,30 @@ import {
   Wind,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { MatchList } from "@/lib/CricketData";
+import axios from "axios";
 
 const MatchDetails = () => {
   const params = useParams();
-  const data = MatchList.find((match) => match._id === Number(params.id));
+  const [data, setData] = useState({});
 
+  useEffect(() => {
+    const fetchDetails = async () => {
+      if (params.id) {
+        const details = await axios.post(
+          "/api/match-details",
+          { matchId: params.id },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        console.log(details.data.data);
+        setData(details.data.data);
+        // You can use 'details' here if needed
+      } else {
+        setData({});
+      }
+    };
+    fetchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const totalMatches =
     (data?.venue?.matchesWonBattingFirst ?? 0) +
     (data?.venue?.matchesWonBattingSecond ?? 0);
