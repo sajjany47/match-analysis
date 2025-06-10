@@ -6,7 +6,6 @@ import {
   MapPin,
   MessageSquare,
   BarChart2,
-  Users,
   Shield,
   Trophy,
   Calendar,
@@ -16,7 +15,10 @@ import {
   Tv2,
   Droplets,
   Wind,
+  Sword as Bat,
+  Target,
 } from "lucide-react";
+
 import { useParams } from "next/navigation";
 import { MatchList } from "@/lib/CricketData";
 import axios from "axios";
@@ -217,16 +219,18 @@ const MatchDetails = () => {
         <div>
           <Tabs
             defaultValue={
-              newData.squadList ? newData.squadList[0].shortName : ""
+              Object.keys(newData).length > 0
+                ? newData.squadList[0].shortName
+                : ""
             }
             className="w-full"
           >
-            <TabsList className="w-full grid grid-cols-2 mb-4 h-12">
+            <TabsList className="w-full grid grid-cols-2 gap-2 mb-4 h-14 bg-muted p-1 rounded-xl shadow-sm">
               {(newData?.squadList ?? []).map((item: any) => (
                 <TabsTrigger
                   key={item.shortName}
                   value={item.shortName}
-                  className="font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="flex items-center gap-2 font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 py-1 transition"
                   style={{
                     color: item.color,
                   }}
@@ -234,37 +238,46 @@ const MatchDetails = () => {
                   <img
                     src={item.flag?.src}
                     alt={`${item.shortName} flag`}
-                    className="w-4 h-4 mr-2 inline-block"
+                    className="w-5 h-5 object-cover rounded-full shadow"
                   />
                   {item.shortName}
                 </TabsTrigger>
               ))}
             </TabsList>
+
             {(newData?.squadList ?? []).map((squad: any, index: number) => (
               <TabsContent value={squad.shortName} key={index}>
-                <Card className="shadow-lg border-border">
-                  <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    {(squad.playingPlayers.length > 0
-                      ? [...squad.playingPlayers, squad.benchPlayers]
-                      : squad.benchPlayers
-                    ).map((player: any, i: any) => (
-                      <div
-                        key={i}
-                        className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
-                      >
-                        <img
-                          src={player.imageUrl?.src}
-                          alt={`${player.name} flag`}
-                          className="w-8 h-8 mr-2 inline-block"
-                        />
-                        <p className="font-semibold text-primary">
-                          {player.name}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {player.type}
-                        </p>
-                      </div>
-                    ))}
+                <Card className="shadow-lg border border-border rounded-xl">
+                  <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {/* Merge playingPlayers + benchPlayers */}
+                    {[...squad.playingPlayers, ...squad.benchPlayers].map(
+                      (player: any, i: number) => (
+                        <div
+                          key={i}
+                          className="border border-muted rounded-lg p-3 flex flex-col gap-2 items-center bg-background hover:shadow-md transition-shadow"
+                        >
+                          <img
+                            src={player.imageUrl?.src}
+                            alt={player.name}
+                            className="w-16 h-16 rounded-full shadow object-cover"
+                          />
+                          <p className="font-semibold text-primary text-center">
+                            {player.name}
+                          </p>
+                          <div className="flex items-center text-sm text-muted-foreground gap-1 text-center">
+                            <Bat className="w-4 h-4 text-accent" />{" "}
+                            {player.batStyle || "N/A"}
+                          </div>
+                          <div className="flex items-center text-sm text-muted-foreground gap-1 text-center">
+                            <Target className="w-4 h-4 text-accent" />{" "}
+                            {player.bowlStyle || "N/A"}
+                          </div>
+                          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                            {player.type}
+                          </span>
+                        </div>
+                      )
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
