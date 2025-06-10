@@ -18,25 +18,29 @@ import {
   Wind,
 } from "lucide-react";
 import { useParams } from "next/navigation";
+import { MatchList } from "@/lib/CricketData";
 import axios from "axios";
 
 const MatchDetails = () => {
   const params = useParams();
-  const [data, setData] = useState({});
+  const data = MatchList.find((match) => match._id === Number(params.id));
+  const [newData, setNewData] = useState<any>({});
 
   useEffect(() => {
     const fetchDetails = async () => {
       if (params.id) {
         const details = await axios.post(
           "/api/match-details",
-          { matchId: params.id },
+          { matchId: Number(params.id) },
           { headers: { "Content-Type": "application/json" } }
         );
         console.log(details.data.data);
-        setData(details.data.data);
+        setNewData(details.data.data);
+        // setData(details.data.data);
         // You can use 'details' here if needed
       } else {
-        setData({});
+        // setData({});
+        setNewData({});
       }
     };
     fetchDetails();
@@ -46,6 +50,7 @@ const MatchDetails = () => {
     (data?.venue?.matchesWonBattingFirst ?? 0) +
     (data?.venue?.matchesWonBattingSecond ?? 0);
 
+  console.log(newData);
   return (
     <div className="container mx-auto py-8 px-4 max-w-7xl">
       {/* Match Header */}
@@ -210,61 +215,60 @@ const MatchDetails = () => {
 
         {/* Squad Tabs */}
         <div>
-          <Tabs defaultValue="team1" className="w-full">
+          <Tabs
+            defaultValue={
+              newData.squadList ? newData.squadList[0].shortName : ""
+            }
+            className="w-full"
+          >
             <TabsList className="w-full grid grid-cols-2 mb-4 h-12">
-              <TabsTrigger
-                value="team1"
-                className="font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                {data?.team1?.name}
-              </TabsTrigger>
-              <TabsTrigger
-                value="team2"
-                className="font-semibold data-[state=active]:bg-blue-300 data-[state=active]:text-destructive-foreground"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                {data?.team2?.name}
-              </TabsTrigger>
+              {(newData?.squadList ?? []).map((item: any) => (
+                <TabsTrigger
+                  key={item.shortName}
+                  value={item.shortName}
+                  className="font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  style={{
+                    color: item.color,
+                  }}
+                >
+                  <img
+                    src={item.flag?.src}
+                    alt={`${item.shortName} flag`}
+                    className="w-4 h-4 mr-2 inline-block"
+                  />
+                  {item.shortName}
+                </TabsTrigger>
+              ))}
             </TabsList>
-            <TabsContent value="team1">
-              <Card className="shadow-lg border-border">
-                <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {(data?.team1?.squad ?? []).map((player, i) => (
-                    <div
-                      key={i}
-                      className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
-                    >
-                      <p className="font-semibold text-primary">
-                        {player.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {player.role}
-                      </p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="team2">
-              <Card className="shadow-lg border-border">
-                <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {(data?.team2?.squad ?? []).map((player, i) => (
-                    <div
-                      key={i}
-                      className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
-                    >
-                      <p className="font-semibold text-primary">
-                        {player.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {player.role}
-                      </p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
+            {(newData?.squadList ?? []).map((squad: any, index: number) => (
+              <TabsContent value={squad.shortName} key={index}>
+                <Card className="shadow-lg border-border">
+                  <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {(squad.playingPlayers.length > 0
+                      ? [...squad.playingPlayers, squad.benchPlayers]
+                      : squad.benchPlayers
+                    ).map((player: any, i: any) => (
+                      <div
+                        key={i}
+                        className="border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow bg-card"
+                      >
+                        <img
+                          src={player.imageUrl?.src}
+                          alt={`${player.name} flag`}
+                          className="w-8 h-8 mr-2 inline-block"
+                        />
+                        <p className="font-semibold text-primary">
+                          {player.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {player.type}
+                        </p>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            ))}
           </Tabs>
         </div>
       </div>
