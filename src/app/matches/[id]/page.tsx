@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,13 +16,14 @@ import {
   Tv2,
   Droplets,
   Wind,
-  Sword as Bat,
-  Target,
+  CheckCircle2,
+  Clock,
 } from "lucide-react";
 
 import { useParams } from "next/navigation";
 import { MatchList } from "@/lib/CricketData";
 import axios from "axios";
+import PlayerProfile from "./PlayerProfile";
 
 const MatchDetails = () => {
   const params = useParams();
@@ -248,35 +250,43 @@ const MatchDetails = () => {
             {(newData?.squadList ?? []).map((squad: any, index: number) => (
               <TabsContent value={squad.shortName} key={index}>
                 <Card className="shadow-lg border border-border rounded-xl">
-                  <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {/* Merge playingPlayers + benchPlayers */}
-                    {[...squad.playingPlayers, ...squad.benchPlayers].map(
-                      (player: any, i: number) => (
-                        <div
-                          key={i}
-                          className="border border-muted rounded-lg p-3 flex flex-col gap-2 items-center bg-background hover:shadow-md transition-shadow"
-                        >
-                          <img
-                            src={player.imageUrl?.src}
-                            alt={player.name}
-                            className="w-16 h-16 rounded-full shadow object-cover"
-                          />
-                          <p className="font-semibold text-primary text-center">
-                            {player.name}
-                          </p>
-                          <div className="flex items-center text-sm text-muted-foreground gap-1 text-center">
-                            <Bat className="w-4 h-4 text-accent" />{" "}
-                            {player.batStyle || "N/A"}
-                          </div>
-                          <div className="flex items-center text-sm text-muted-foreground gap-1 text-center">
-                            <Target className="w-4 h-4 text-accent" />{" "}
-                            {player.bowlStyle || "N/A"}
-                          </div>
-                          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                            {player.type}
+                  <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                    {squad.playingPlayers.length > 0 ? (
+                      <>
+                        <div className="sm:col-span-2 md:col-span-3 lg:col-span-4 flex items-center gap-3 px-2 py-1.5 bg-green-50 rounded-lg border border-green-100">
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
+                          <span className="text-sm font-medium text-green-800">
+                            Playing XI
+                          </span>
+                          <span className="ml-auto text-xs font-medium px-2 py-0.5 bg-green-100 text-green-800 rounded-full">
+                            {squad.playingPlayers.length} players
                           </span>
                         </div>
-                      )
+
+                        {squad.playingPlayers.map((player: any, i: number) => (
+                          <PlayerProfile key={i} {...player} isPlaying />
+                        ))}
+
+                        <div className="sm:col-span-2 md:col-span-3 lg:col-span-4 flex items-center gap-3 px-2 py-1.5 bg-amber-50 rounded-lg border border-amber-100 mt-2">
+                          <Clock className="w-5 h-5 text-amber-600" />
+                          <span className="text-sm font-medium text-amber-800">
+                            Bench Players
+                          </span>
+                          <span className="ml-auto text-xs font-medium px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full">
+                            {squad.benchPlayers.length} players
+                          </span>
+                        </div>
+
+                        {squad.benchPlayers.map((player: any, i: number) => (
+                          <PlayerProfile key={i} {...player} />
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        {squad.benchPlayers.map((player: any, i: number) => (
+                          <PlayerProfile key={i} {...player} />
+                        ))}
+                      </>
                     )}
                   </CardContent>
                 </Card>
