@@ -11,27 +11,76 @@ const LiveMatchCard = ({ match }: { match: Match }) => {
     if (!team.cricketScore || team.cricketScore.length === 0) {
       return "Yet to bat";
     }
+    const formattedScores = team.cricketScore.map((score: any) => {
+      const runs = score.runs ?? 0;
+      const wickets = score.wickets ?? 0;
+      const overs = score.overs ? ` (${score.overs})` : "";
+      return `${runs}/${wickets}${overs}`;
+    });
 
-    const score = team.cricketScore[0];
-    return `${score.runs || 0}/${score.wickets || 0}${
-      score.overs ? ` (${score.overs})` : ""
-    }`;
+    // Join innings with ' & '
+    return formattedScores.join(" & ");
   };
 
   // Calculate required runs if team1 has completed their innings
   const getMatchStatusText = () => {
-    if (team1.cricketScore?.[0]?.status === "COMPLETED") {
+    const t1Innings = team1.cricketScore || [];
+    const t2Innings = team2.cricketScore || [];
+
+    const lastT1 = t1Innings[t1Innings.length - 1];
+    const lastT2 = t2Innings[t2Innings.length - 1];
+
+    // If both teams have completed 1 inning, and match has more to go
+    if (
+      t1Innings.length > 0 &&
+      lastT1.status === "COMPLETED" &&
+      t2Innings.length === 0
+    ) {
       return `${team1.teamShortName} innings completed`;
     }
 
+    // If second team is batting, and game is in progress
     if (
-      team2.cricketScore?.[0]?.runs !== undefined &&
-      team1.cricketScore?.[0]?.runs !== undefined
+      t1Innings.length > 0 &&
+      t2Innings.length > 0 &&
+      lastT2.status === "IN_PROGRESS"
     ) {
-      const runsNeeded =
-        team1.cricketScore[0].runs - team2.cricketScore[0].runs + 1;
-      const ballsLeft = 120 - parseInt(team2.cricketScore[0]?.balls || "0");
+      const target = t1Innings.reduce(
+        (sum: any, score: any) => sum + (score.runs || 0),
+        0
+      );
+      const current = t2Innings.reduce(
+        (sum: any, score: any) => sum + (score.runs || 0),
+        0
+      );
+      const runsNeeded = target - current + 1;
+      const ballsBowled = parseInt(lastT2.balls || "0", 10);
+      const totalBalls = 120; // For T20; adjust per format if needed
+      const ballsLeft = totalBalls - ballsBowled;
+
       return `${team2.teamShortName} need ${runsNeeded} runs in ${ballsLeft} balls`;
+    }
+
+    // Match fully done (e.g., both innings completed or both teams all out)
+    if (lastT1?.status === "COMPLETED" && lastT2?.status === "COMPLETED") {
+      const t1Total = t1Innings.reduce(
+        (sum: any, score: any) => sum + (score.runs || 0),
+        0
+      );
+      const t2Total = t2Innings.reduce(
+        (sum: any, score: any) => sum + (score.runs || 0),
+        0
+      );
+
+      if (t1Total > t2Total) {
+        return `${team1.teamShortName} won by ${t1Total - t2Total} runs`;
+      } else if (t2Total > t1Total) {
+        return `${team2.teamShortName} won by ${
+          10 - (lastT2.wickets || 0)
+        } wickets`;
+      } else {
+        return `Match drawn or tied`;
+      }
     }
 
     return "Match in progress";

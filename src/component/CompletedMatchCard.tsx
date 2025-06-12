@@ -1,85 +1,129 @@
+/* eslint-disable @next/next/no-img-element */
 import { Match } from "@/lib/CricketData";
 import Link from "next/link";
 
 const CompletedMatchCard = ({ match }: { match: Match }) => {
-  const winningTeam: any = match.teams.find((team) => team.isWinner);
-  const losingTeam: any = match.teams.find((team) => !team.isWinner);
+  const winningTeam: any = match.teams.find((team) => team.isWinner === true);
+  const losingTeam: any = match.teams.find((team) => team.isWinner === false);
+
+  // Helper function to format score
+  const formatScore = (team: any) => {
+    if (!team?.cricketScore || team.cricketScore.length === 0) {
+      return "Yet to bat";
+    }
+
+    const formattedScores = team.cricketScore.map((score: any) => {
+      const runs = score.runs ?? 0;
+      const wickets = score.wickets ?? 0;
+      const overs = score.overs ? ` (${score.overs})` : "";
+      return `${runs}/${wickets}${overs}`;
+    });
+
+    return formattedScores.join(" & ");
+  };
+
+  const getResultText = () => {
+    if (match.status === "ABANDONED") {
+      return (
+        <div className="font-bold text-gray-600 text-sm mb-2">
+          Match abandoned
+        </div>
+      );
+    }
+
+    if (winningTeam && losingTeam) {
+      const runDiff =
+        (winningTeam.cricketScore?.[0]?.runs || 0) -
+        (losingTeam.cricketScore?.[0]?.runs || 0);
+
+      return (
+        <div className="font-bold text-green-700 text-sm mb-2">
+          {winningTeam.teamShortName} won by {Math.abs(runDiff)}{" "}
+          {winningTeam.cricketScore?.[0]?.status === "COMPLETED"
+            ? "runs"
+            : "wickets"}
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <Link href={`/matches/${match.matchId}`} className="block">
       <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-        <div className="bg-green-100 px-4 py-2">
+        <div
+          className={`px-4 py-2 ${
+            match.status === "ABANDONED" ? "bg-gray-100" : "bg-green-100"
+          }`}
+        >
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-green-800">
+            <span
+              className={`text-sm font-medium ${
+                match.status === "ABANDONED"
+                  ? "text-gray-800"
+                  : "text-green-800"
+              }`}
+            >
               {match.tour.name} • {match.format}
             </span>
-            <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded">
-              COMPLETED
+            <span
+              className={`text-xs px-2 py-1 rounded ${
+                match.status === "ABANDONED"
+                  ? "bg-gray-200 text-gray-800"
+                  : "bg-green-200 text-green-800"
+              }`}
+            >
+              {match.status}
             </span>
           </div>
         </div>
 
         <div className="p-4">
           <div className="mb-3">
-            {/* Winning Team */}
+            {/* Team 1 */}
             <div className="flex justify-between items-center mb-1">
               <div className="flex items-center">
-                {winningTeam?.teamFlagUrl && (
+                {match.teams[0].teamFlagUrl && (
                   <img
-                    src={winningTeam.teamFlagUrl}
-                    alt={winningTeam.teamShortName}
+                    src={match.teams[0].teamFlagUrl}
+                    alt={match.teams[0].teamShortName}
                     className="w-5 h-5 mr-2 rounded-full object-cover"
                   />
                 )}
                 <span className="font-medium">
-                  {winningTeam?.teamShortName}
+                  {match.teams[0].teamShortName}
                 </span>
               </div>
               <span className="font-semibold">
-                {winningTeam?.cricketScore[0]?.runs}/
-                {winningTeam?.cricketScore[0]?.wickets} (
-                {winningTeam?.cricketScore[0]?.overs})
+                {formatScore(match.teams[0])}
               </span>
             </div>
 
-            {/* Losing Team */}
+            {/* Team 2 */}
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                {losingTeam?.teamFlagUrl && (
+                {match.teams[1].teamFlagUrl && (
                   <img
-                    src={losingTeam.teamFlagUrl}
-                    alt={losingTeam.teamShortName}
+                    src={match.teams[1].teamFlagUrl}
+                    alt={match.teams[1].teamShortName}
                     className="w-5 h-5 mr-2 rounded-full object-cover"
                   />
                 )}
-                <span className="font-medium">{losingTeam?.teamShortName}</span>
+                <span className="font-medium">
+                  {match.teams[1].teamShortName}
+                </span>
               </div>
               <span className="font-semibold">
-                {losingTeam?.cricketScore[0]?.runs}/
-                {losingTeam?.cricketScore[0]?.wickets} (
-                {losingTeam?.cricketScore[0]?.overs})
+                {formatScore(match.teams[1])}
               </span>
             </div>
           </div>
 
-          <div className="font-bold text-green-700 text-sm mb-2">
-            {winningTeam?.teamShortName} won by{" "}
-            {Math.abs(
-              (winningTeam?.cricketScore[0]?.runs || 0) -
-                (losingTeam?.cricketScore[0]?.runs || 0)
-            )}{" "}
-            {winningTeam?.cricketScore[0]?.status === "COMPLETED"
-              ? "runs"
-              : "wickets"}
-          </div>
+          {/* Result */}
+          {getResultText()}
 
-          {/* Toss information - assuming it's available in match.tossWinner */}
-          {/* {match.tossWinner && (
-          <div className="text-xs text-gray-600 mb-2">
-            Toss: {match.tossWinner} won the toss and chose {match.tossDecision}
-          </div>
-        )} */}
-
+          {/* Venue */}
           <div className="text-xs text-gray-500">
             <div className="flex items-center">
               <svg

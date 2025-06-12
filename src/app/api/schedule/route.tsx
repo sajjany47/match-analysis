@@ -4,7 +4,7 @@ import moment from "moment";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log(body.fromDate);
+
     const fromDate = body.fromDate
       ? moment(body.fromDate).format("YYYY-MM-DD")
       : moment().format("YYYY-MM-DD");
