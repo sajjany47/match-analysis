@@ -1,6 +1,7 @@
 import axios from "axios";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { load } from "cheerio";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -50,4 +51,11 @@ export const CountryDetails = async (countryName: string) => {
       name: null,
     };
   }
+};
+
+export const GetHtml = async (url: string) => {
+  const { data } = await axios.get(url);
+  const $ = load(data);
+
+  return $;
 };
