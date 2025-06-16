@@ -60,7 +60,29 @@ export const NewPlayerDetails = async () => {
           : `https://advancecricket.com${href}`;
       }
     });
-    console.log(links);
+
+    if (links.recentMatch) {
+      const tabLinks: any = [];
+
+      const recentMatchHtml = await GetHtml(links.recentMatch);
+
+      recentMatchHtml(
+        "#page-top .container-lg ul.nav.nav-pills a.nav-link"
+      ).each((i, el) => {
+        const tabText = recentMatchHtml(el).text().trim(); // Batting or Bowling
+        const href = recentMatchHtml(el).attr("href"); // #virat-kohli-batting or #virat-kohli-bowling
+
+        // Create full URL if needed
+        const fullUrl = links.recentMatch.split("#")[0] + href;
+
+        tabLinks.push({
+          type: tabText,
+          url: fullUrl.replace("-0#", `-${i + 1}#`),
+        });
+      });
+      console.log(tabLinks);
+    }
+
     return playerList;
   } catch (error) {
     console.error("Error fetching player details:", error);
