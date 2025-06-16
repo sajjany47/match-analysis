@@ -62,7 +62,9 @@ export const NewPlayerDetails = async () => {
     });
 
     if (links.recentMatch) {
-      const tabLinks: any = [];
+      const tabLinks: any = [
+        { type: "fantasyPoints", url: links.dream11Points },
+      ];
 
       const recentMatchHtml = await GetHtml(links.recentMatch);
 
