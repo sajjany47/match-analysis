@@ -31,80 +31,35 @@ export const PlayerDetails = async () => {
 
   const $B: any = await GetHtml(playerList[0].url);
 
-  const playerPersonalDetails: any = {
-    basicInfo: {},
-    teams: [],
-  };
+  const playerDetails: any = {};
+  const teamArray: any = [];
 
-  // Basic Information
-  playerPersonalDetails.basicInfo.fullName = $B(
-    'span.ds-text-title-s:contains("Full Name")'
-  )
-    .next()
-    .text()
-    .trim();
-  playerPersonalDetails.basicInfo.born = $B(
-    'span.ds-text-title-s:contains("Born")'
-  )
-    .next()
-    .text()
-    .trim();
-  playerPersonalDetails.basicInfo.age = $B(
-    'span.ds-text-title-s:contains("Age")'
-  )
-    .next()
-    .text()
-    .trim();
-  playerPersonalDetails.basicInfo.battingStyle = $B(
-    'span.ds-text-title-s:contains("Batting Style")'
-  )
-    .next()
-    .text()
-    .trim();
-  playerPersonalDetails.basicInfo.bowlingStyle = $B(
-    'span.ds-text-title-s:contains("Bowling Style")'
-  )
-    .next()
-    .text()
-    .trim();
-  playerPersonalDetails.basicInfo.playingRole = $B(
-    'span.ds-text-title-s:contains("Playing Role")'
-  )
-    .next()
-    .text()
-    .trim();
+  // Extract player details
+  $B(".ds-grid.ds-gap-4 > div").each((_: any, element: any) => {
+    const label = $B(element).find("p").first().text().trim();
+    const value = $B(element).find("span > p").text().trim();
 
-  $B('a[href^="/team/"]').each((i: any, el: any) => {
-    const teamElement = $B(el);
-    const teamName = teamElement.find("span.ds-text-title-s").text().trim();
-
-    // Get flag image URL
-    let flagUrl = "";
-    const imgElement = teamElement.find("img.overview-teams-image");
-    if (imgElement.length) {
-      flagUrl = imgElement.attr("src") || "";
-      // Handle lazy loading images
-      if (flagUrl.includes("lazyimage-noaspect.svg")) {
-        flagUrl = imgElement.attr("data-src") || "";
-      }
-    } else {
-      // For teams with icon instead of image
-      const iconElement = teamElement.find("i.icon-shield-filled");
-      if (iconElement.length) {
-        flagUrl = "icon"; // Mark as icon
-      }
+    if (label && value) {
+      playerDetails[label] = value;
     }
+  });
 
-    if (
-      teamName &&
-      !playerPersonalDetails.teams.some((t: any) => t.name === teamName)
-    ) {
-      playerPersonalDetails.teams.push({
+  // Extract teams
+  $B(".ds-grid.ds-gap-y-4 a").each((_: any, el: any) => {
+    const teamName = $B(el).find("span span").text().trim();
+    const logoUrl = $B(el).find("img").attr("src") || null;
+
+    if (teamName) {
+      teamArray.push({
         name: teamName,
-        flagUrl: flagUrl,
+        logo: logoUrl,
       });
     }
   });
-  console.log(playerPersonalDetails);
+
+  console.log({
+    playerDetails,
+    teams: teamArray,
+  });
   return playerList;
 };
