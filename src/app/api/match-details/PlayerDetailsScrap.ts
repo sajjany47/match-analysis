@@ -29,84 +29,82 @@ export const PlayerDetails = async () => {
     throw new Error("No players found");
   }
 
-  // const response: any = await GetHtml(playerList[0].url);
+  const $B: any = await GetHtml(playerList[0].url);
 
-  // const $B = load(response.data);
+  const playerPersonalDetails: any = {
+    basicInfo: {},
+    teams: [],
+  };
 
-  // const playerPersonalDetails: any = {
-  //   basicInfo: {},
-  //   teams: [],
-  // };
+  // Basic Information
+  playerPersonalDetails.basicInfo.fullName = $B(
+    'span.ds-text-title-s:contains("Full Name")'
+  )
+    .next()
+    .text()
+    .trim();
+  playerPersonalDetails.basicInfo.born = $B(
+    'span.ds-text-title-s:contains("Born")'
+  )
+    .next()
+    .text()
+    .trim();
+  playerPersonalDetails.basicInfo.age = $B(
+    'span.ds-text-title-s:contains("Age")'
+  )
+    .next()
+    .text()
+    .trim();
+  playerPersonalDetails.basicInfo.battingStyle = $B(
+    'span.ds-text-title-s:contains("Batting Style")'
+  )
+    .next()
+    .text()
+    .trim();
+  playerPersonalDetails.basicInfo.bowlingStyle = $B(
+    'span.ds-text-title-s:contains("Bowling Style")'
+  )
+    .next()
+    .text()
+    .trim();
+  playerPersonalDetails.basicInfo.playingRole = $B(
+    'span.ds-text-title-s:contains("Playing Role")'
+  )
+    .next()
+    .text()
+    .trim();
 
-  // // Basic Information
-  // playerPersonalDetails.basicInfo.fullName = $B(
-  //   'span.ds-text-title-s:contains("Full Name")'
-  // )
-  //   .next()
-  //   .text()
-  //   .trim();
-  // playerPersonalDetails.basicInfo.born = $B(
-  //   'span.ds-text-title-s:contains("Born")'
-  // )
-  //   .next()
-  //   .text()
-  //   .trim();
-  // playerPersonalDetails.basicInfo.age = $B(
-  //   'span.ds-text-title-s:contains("Age")'
-  // )
-  //   .next()
-  //   .text()
-  //   .trim();
-  // playerPersonalDetails.basicInfo.battingStyle = $B(
-  //   'span.ds-text-title-s:contains("Batting Style")'
-  // )
-  //   .next()
-  //   .text()
-  //   .trim();
-  // playerPersonalDetails.basicInfo.bowlingStyle = $B(
-  //   'span.ds-text-title-s:contains("Bowling Style")'
-  // )
-  //   .next()
-  //   .text()
-  //   .trim();
-  // playerPersonalDetails.basicInfo.playingRole = $B(
-  //   'span.ds-text-title-s:contains("Playing Role")'
-  // )
-  //   .next()
-  //   .text()
-  //   .trim();
+  $B('a[href^="/team/"]').each((i: any, el: any) => {
+    const teamElement = $B(el);
+    const teamName = teamElement.find("span.ds-text-title-s").text().trim();
 
-  // $B('a[href^="/team/"]').each((i, el) => {
-  //   const teamElement = $B(el);
-  //   const teamName = teamElement.find("span.ds-text-title-s").text().trim();
+    // Get flag image URL
+    let flagUrl = "";
+    const imgElement = teamElement.find("img.overview-teams-image");
+    if (imgElement.length) {
+      flagUrl = imgElement.attr("src") || "";
+      // Handle lazy loading images
+      if (flagUrl.includes("lazyimage-noaspect.svg")) {
+        flagUrl = imgElement.attr("data-src") || "";
+      }
+    } else {
+      // For teams with icon instead of image
+      const iconElement = teamElement.find("i.icon-shield-filled");
+      if (iconElement.length) {
+        flagUrl = "icon"; // Mark as icon
+      }
+    }
 
-  //   // Get flag image URL
-  //   let flagUrl = "";
-  //   const imgElement = teamElement.find("img.overview-teams-image");
-  //   if (imgElement.length) {
-  //     flagUrl = imgElement.attr("src") || "";
-  //     // Handle lazy loading images
-  //     if (flagUrl.includes("lazyimage-noaspect.svg")) {
-  //       flagUrl = imgElement.attr("data-src") || "";
-  //     }
-  //   } else {
-  //     // For teams with icon instead of image
-  //     const iconElement = teamElement.find("i.icon-shield-filled");
-  //     if (iconElement.length) {
-  //       flagUrl = "icon"; // Mark as icon
-  //     }
-  //   }
-
-  //   if (
-  //     teamName &&
-  //     !playerPersonalDetails.teams.some((t: any) => t.name === teamName)
-  //   ) {
-  //     playerPersonalDetails.teams.push({
-  //       name: teamName,
-  //       flagUrl: flagUrl,
-  //     });
-  //   }
-  // });
-
+    if (
+      teamName &&
+      !playerPersonalDetails.teams.some((t: any) => t.name === teamName)
+    ) {
+      playerPersonalDetails.teams.push({
+        name: teamName,
+        flagUrl: flagUrl,
+      });
+    }
+  });
+  console.log(playerPersonalDetails);
   return playerList;
 };
