@@ -29,23 +29,21 @@ export const PlayerDetails = async () => {
     throw new Error("No players found");
   }
 
-  const $B: any = await GetHtml(playerList[0].url);
+  const $B = await GetHtml(playerList[0].url);
+  console.log($B.html());
 
-  const playerDetails: any = {};
-  const teamArray: any = [];
+  const playerDetails: Record<string, string> = {};
+  const teamArray: { name: string; logo: string | null }[] = [];
 
-  // Extract player details
-  $B(".ds-grid.ds-gap-4 > div").each((_: any, element: any) => {
+  $B(".ds-grid.ds-gap-4 > div").each((_, element) => {
     const label = $B(element).find("p").first().text().trim();
     const value = $B(element).find("span > p").text().trim();
-
     if (label && value) {
       playerDetails[label] = value;
     }
   });
 
-  // Extract teams
-  $B(".ds-grid.ds-gap-y-4 a").each((_: any, el: any) => {
+  $B(".ds-grid.ds-gap-y-4 a").each((_, el) => {
     const teamName = $B(el).find("span span").text().trim();
     const logoUrl = $B(el).find("img").attr("src") || null;
 
@@ -57,9 +55,9 @@ export const PlayerDetails = async () => {
     }
   });
 
-  console.log({
-    playerDetails,
-    teams: teamArray,
-  });
+  // console.log({
+  //   playerDetails,
+  //   teams: teamArray,
+  // });
   return playerList;
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextRequest } from "next/server";
 import { PlayerDetails } from "./PlayerDetailsScrap";
+import { NewPlayerDetails } from "./NewPlayerDetails";
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,8 +27,8 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const searchPlayerList = await PlayerDetails();
-    console.log(searchPlayerList);
+    const searchPlayerList = await NewPlayerDetails();
+    // console.log(searchPlayerList);
 
     return Response.json(
       { data: { squadList: squadList.data.data.squadSegment } },
