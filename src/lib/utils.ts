@@ -54,8 +54,8 @@ export const CountryDetails = async (countryName: string) => {
 };
 
 export const GetHtml = async (url: string) => {
-  const response = await fetch(url);
-  const data = await response.text();
+  const response = await axios.get(url);
+  const data = response.data;
   const $ = load(data);
 
   return $;
