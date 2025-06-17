@@ -1,6 +1,7 @@
 import { GetHtml } from "@/lib/utils";
 import axios from "axios";
 import { load } from "cheerio";
+import { BatDetails, BattingStat } from "./PerformanceDetail";
 
 export const NewPlayerDetails = async () => {
   const url = "https://advancecricket.com/player-load";
@@ -64,6 +65,8 @@ export const NewPlayerDetails = async () => {
     if (links.recentMatch) {
       const tabLinks: any = [
         { type: "fantasyPoints", url: links.dream11Points },
+        { type: "battingStat", url: links.battingForm },
+        { type: "bowlingStat", url: links.bowlingForm },
       ];
 
       const recentMatchHtml = await GetHtml(links.recentMatch);
@@ -82,7 +85,11 @@ export const NewPlayerDetails = async () => {
           url: fullUrl.replace("-0#", `-${i + 1}#`),
         });
       });
-      console.log(tabLinks);
+
+      const test = await BattingStat(
+        "https://advancecricket.com/cricketer-stats/sunil-narine/80458552-1#sunil-narine-batting-stats"
+      );
+      console.log(test);
     }
 
     return playerList;
