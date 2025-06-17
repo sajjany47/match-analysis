@@ -1,7 +1,12 @@
 import { GetHtml } from "@/lib/utils";
 import axios from "axios";
 import { load } from "cheerio";
-import { BatDetails, BattingStat } from "./PerformanceDetail";
+import {
+  BatDetails,
+  BattingStat,
+  BowlingDetails,
+  BowlingStat,
+} from "./PerformanceDetail";
 
 export const NewPlayerDetails = async () => {
   const url = "https://advancecricket.com/player-load";
@@ -32,65 +37,31 @@ export const NewPlayerDetails = async () => {
       throw new Error("No players found");
     }
     const getInfoUrl = await GetHtml(playerList[0].url);
-    const links = {
-      battingForm: "",
-      bowlingForm: "",
-      dream11Points: "",
-      recentMatch: "",
-    };
+    const requiredNames = [
+      "Dream11 Points",
+      "Batting Form",
+      "Bowling Form",
+      "Batting Stats",
+      "Bowling Stats",
+      "Against Teams",
+      "Against Teams On Stadiums",
+    ];
+    const result: { name: string; url: string }[] = [];
 
-    getInfoUrl("ul.dropdown-menu a.dropdown-item").each((_, el) => {
-      const title = getInfoUrl(el).attr("title")?.toLowerCase() || "";
-      const href = getInfoUrl(el).attr("href");
+    getInfoUrl(".dropdown-menu a").each((_, el) => {
+      const name = getInfoUrl(el).text().trim();
+      const href = getInfoUrl(el).attr("href") || "";
 
-      if (title.includes("batting")) {
-        links.battingForm = href?.startsWith("http")
-          ? href
-          : `https://advancecricket.com${href}`;
-      } else if (title.includes("bowling")) {
-        links.bowlingForm = href?.startsWith("http")
-          ? href
-          : `https://advancecricket.com${href}`;
-      } else if (title.includes("dream11")) {
-        links.dream11Points = href?.startsWith("http")
-          ? href
-          : `https://advancecricket.com${href}`;
-      } else if (title.includes("recent")) {
-        links.recentMatch = href?.startsWith("http")
-          ? href
-          : `https://advancecricket.com${href}`;
+      if (requiredNames.includes(name)) {
+        result.push({ name, url: href });
       }
     });
+    // console.log(result);
 
-    if (links.recentMatch) {
-      const tabLinks: any = [
-        { type: "fantasyPoints", url: links.dream11Points },
-        { type: "battingStat", url: links.battingForm },
-        { type: "bowlingStat", url: links.bowlingForm },
-      ];
-
-      const recentMatchHtml = await GetHtml(links.recentMatch);
-
-      recentMatchHtml(
-        "#page-top .container-lg ul.nav.nav-pills a.nav-link"
-      ).each((i, el) => {
-        const tabText = recentMatchHtml(el).text().trim(); // Batting or Bowling
-        const href = recentMatchHtml(el).attr("href"); // #virat-kohli-batting or #virat-kohli-bowling
-
-        // Create full URL if needed
-        const fullUrl = links.recentMatch.split("#")[0] + href;
-
-        tabLinks.push({
-          type: tabText,
-          url: fullUrl.replace("-0#", `-${i + 1}#`),
-        });
-      });
-
-      const test = await BattingStat(
-        "https://advancecricket.com/cricketer-stats/sunil-narine/80458552-1#sunil-narine-batting-stats"
-      );
-      console.log(test);
-    }
+    // const test = await BowlingStat(
+    //   "https://advancecricket.com/cricketer-stats/virat-kohli/83755737-2#virat-kohli-bowling-stats"
+    // );
+    // console.log(test);
 
     return playerList;
   } catch (error) {

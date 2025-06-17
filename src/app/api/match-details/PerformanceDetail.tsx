@@ -121,30 +121,29 @@ export const BattingStat = async (url: string) => {
 
 export const BowlingStat = async (url: string) => {
   const $ = await GetHtml(url);
-  const result: any = [];
+  const result: any[] = [];
 
-  // Target only rows with class 'tsuccess' inside the correct table
-  const tableRows = $("div[id$='-batting-stats'] table tbody tr.tsuccess");
+  // Select table rows with class 'tsuccess' inside any div ending with '-bowling-stats'
+  const tableRows = $("div[id$='-bowling-stats'] table tbody tr.tsuccess");
 
   tableRows.each((_, row) => {
     const cols = $(row).find("td");
 
-    if (cols.length >= 14) {
+    if (cols.length >= 13) {
       result.push({
         year: $(cols[0]).text().trim(),
         mode: $(cols[1]).text().trim(),
         matches: $(cols[2]).text().trim(),
         innings: $(cols[3]).text().trim(),
-        runs: $(cols[4]).text().trim(),
-        balls: $(cols[5]).text().trim(),
-        notOut: $(cols[6]).text().trim(),
-        average: $(cols[7]).text().trim(),
-        strikeRate: $(cols[8]).text().trim(),
-        highScore: $(cols[9]).text().trim(),
-        fifty: $(cols[10]).text().trim(),
-        hundred: $(cols[11]).text().trim(),
-        fours: $(cols[12]).text().trim(),
-        sixes: $(cols[13]).text().trim(),
+        balls: $(cols[4]).text().trim(),
+        runs: $(cols[5]).text().trim(),
+        wicket: $(cols[6]).text().trim(),
+        strikeRate: $(cols[7]).text().trim(),
+        twoWicket: $(cols[8]).text().trim(),
+        threeWicket: $(cols[9]).text().trim(),
+        fiveWicket: $(cols[10]).text().trim(),
+        economy: $(cols[11]).text().trim(),
+        average: $(cols[12]).text().trim(),
       });
     }
   });
