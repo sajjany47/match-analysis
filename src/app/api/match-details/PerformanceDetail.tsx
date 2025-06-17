@@ -150,3 +150,37 @@ export const BowlingStat = async (url: string) => {
 
   return result;
 };
+
+export const FantasyStat = async (url: string) => {
+  const $ = await GetHtml(url);
+
+  const container = $(
+    "div[id$='dream11-points'], div[class*='dream11-points']"
+  );
+  const rows = container.find("tbody tr");
+
+  const dream11Stats: any = [];
+
+  if (!container.length) {
+    console.warn("❌ Dream11 section not found in HTML.");
+  }
+
+  rows.each((_, row) => {
+    const cols = $(row).find("td");
+
+    if (cols.length < 6) return;
+
+    const date = $(cols[0]).text().trim();
+    const matchAnchor = $(cols[1]).find("a");
+    const match = matchAnchor.text().trim();
+
+    const bat = $(cols[2]).text().trim();
+    const bowl = $(cols[3]).text().trim();
+    const field = $(cols[4]).text().trim();
+    const total = $(cols[5]).text().trim();
+
+    dream11Stats.push({ date, match, bat, bowl, field, total });
+  });
+
+  return dream11Stats;
+};

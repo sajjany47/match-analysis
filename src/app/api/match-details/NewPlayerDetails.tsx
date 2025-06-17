@@ -6,6 +6,7 @@ import {
   BattingStat,
   BowlingDetails,
   BowlingStat,
+  FantasyStat,
 } from "./PerformanceDetail";
 
 export const NewPlayerDetails = async () => {
@@ -58,8 +59,8 @@ export const NewPlayerDetails = async () => {
     });
     // console.log(result);
 
-    // const test = await BowlingStat(
-    //   "https://advancecricket.com/cricketer-stats/virat-kohli/83755737-2#virat-kohli-bowling-stats"
+    // const test = await FantasyStat(
+    //   "https://advancecricket.com/player-dream11/virat-kohli/83755737#virat-kohli-dream11-points"
     // );
     // console.log(test);
 
