@@ -60,50 +60,48 @@ export const NewPlayerDetails = async (name: string) => {
         result.push({ name, url: href });
       }
     });
-    let fantasyPoints: any[] = [];
-    let battingForm: any[] = [];
-    let bowlingForm: any[] = [];
-    let battingStats: any[] = [];
-    let bowlingStats: any[] = [];
-    let overallStats: any = {};
 
-    const prepareData = await Promise.all(
+    const statData: {
+      fantasyPoints: any[];
+      battingForm: any[];
+      bowlingForm: any[];
+      battingStats: any[];
+      bowlingStats: any[];
+      overallStats: any;
+    } = {
+      fantasyPoints: [],
+      battingForm: [],
+      bowlingForm: [],
+      battingStats: [],
+      bowlingStats: [],
+      overallStats: {},
+    };
+    await Promise.all(
       result.map(async (item) => {
-        if (item.name === "Dream11 Points") {
-          fantasyPoints = await FantasyStats(item.url);
-          return fantasyPoints;
-        }
-        if (item.name === "Batting Form") {
-          battingForm = await BattingForm(item.url);
-          return battingForm;
-        }
-        if (item.name === "Bowling Form") {
-          bowlingForm = await BowlingForm(item.url);
-          return bowlingForm;
-        }
-        if (item.name === "Batting Stats") {
-          battingStats = await BattingStats(item.url);
-          return battingStats;
-        }
-        if (item.name === "Bowling Stats") {
-          bowlingStats = await BowlingStats(item.url);
-          return bowlingStats;
-        }
-        if (item.name === "Overall Stats") {
-          overallStats = await OverallStats(item.url);
-          return overallStats;
+        switch (item.name) {
+          case "Dream11 Points":
+            statData.fantasyPoints = await FantasyStats(item.url);
+            break;
+          case "Batting Form":
+            statData.battingForm = await BattingForm(item.url);
+            break;
+          case "Bowling Form":
+            statData.bowlingForm = await BowlingForm(item.url);
+            break;
+          case "Batting Stats":
+            statData.battingStats = await BattingStats(item.url);
+            break;
+          case "Bowling Stats":
+            statData.bowlingStats = await BowlingStats(item.url);
+            break;
+          case "Overall Stats":
+            statData.overallStats = await OverallStats(item.url);
+            break;
         }
       })
     );
 
-    return {
-      fantasyPoints,
-      battingForm,
-      bowlingForm,
-      battingStats,
-      bowlingStats,
-      overallStats,
-    };
+    return statData;
   } catch (error) {
     console.log(error);
     return [];
