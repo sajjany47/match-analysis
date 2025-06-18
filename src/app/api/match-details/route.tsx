@@ -1,6 +1,5 @@
 import axios from "axios";
 import { NextRequest } from "next/server";
-import { PlayerDetails } from "./PlayerDetailsScrap";
 import { NewPlayerDetails } from "./NewPlayerDetails";
 
 export async function POST(request: NextRequest) {
@@ -27,13 +26,25 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const searchPlayerList = await NewPlayerDetails();
+    // const searchPlayerList = await NewPlayerDetails();
     // console.log(searchPlayerList);
 
-    return Response.json(
-      { data: { squadList: squadList.data.data.squadSegment } },
-      { status: 200 }
+    const prepareData = await Promise.all(
+      squadList.data.data.squadSegment.map(async (item: any) => {
+        const mapPlayer =
+          item.playingPlayers.length > 0
+            ? item.playingPlayers
+            : item.playingPlayers.benchPlayers;
+        const playerStat: any = await Promise.all(
+          mapPlayer.map(async (elm: any) => {
+            const searchPlayer = await NewPlayerDetails(elm.name);
+            return { ...elm, ...searchPlayer };
+          })
+        );
+        return playerStat;
+      })
     );
+    return Response.json({ data: { squadList: prepareData } }, { status: 200 });
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 });
   }

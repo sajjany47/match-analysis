@@ -2,18 +2,18 @@ import { GetHtml } from "@/lib/utils";
 import axios from "axios";
 import { load } from "cheerio";
 import {
-  BatDetails,
-  BattingStat,
-  BowlingDetails,
-  BowlingStat,
-  FantasyStat,
-  OverallStat,
+  BattingForm,
+  BattingStats,
+  BowlingForm,
+  BowlingStats,
+  FantasyStats,
+  OverallStats,
 } from "./PerformanceDetail";
 
-export const NewPlayerDetails = async () => {
+export const NewPlayerDetails = async (name: string) => {
   const url = "https://advancecricket.com/player-load";
   const formData = new FormData();
-  formData.append("text", "virat kohli");
+  formData.append("text", name);
   try {
     const { data } = await axios.post(url, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -45,10 +45,12 @@ export const NewPlayerDetails = async () => {
       "Bowling Form",
       "Batting Stats",
       "Bowling Stats",
-      "Against Teams",
-      "Against Teams On Stadiums",
+      // "Against Teams",
+      // "Against Teams On Stadiums",
     ];
-    const result: { name: string; url: string }[] = [];
+    const result: { name: string; url: string }[] = [
+      { name: "Overall Stats", url: playerList[0].url },
+    ];
 
     getInfoUrl(".dropdown-menu a").each((_, el) => {
       const name = getInfoUrl(el).text().trim();
@@ -58,16 +60,52 @@ export const NewPlayerDetails = async () => {
         result.push({ name, url: href });
       }
     });
-    // console.log(result);
+    let fantasyPoints: any[] = [];
+    let battingForm: any[] = [];
+    let bowlingForm: any[] = [];
+    let battingStats: any[] = [];
+    let bowlingStats: any[] = [];
+    let overallStats: any = {};
 
-    // const test = await OverallStat(
-    //   "https://advancecricket.com/cricketer/sunil-narine/80458552"
-    // );
-    // console.log(test);
+    const prepareData = await Promise.all(
+      result.map(async (item) => {
+        if (item.name === "Dream11 Points") {
+          fantasyPoints = await FantasyStats(item.url);
+          return fantasyPoints;
+        }
+        if (item.name === "Batting Form") {
+          battingForm = await BattingForm(item.url);
+          return battingForm;
+        }
+        if (item.name === "Bowling Form") {
+          bowlingForm = await BowlingForm(item.url);
+          return bowlingForm;
+        }
+        if (item.name === "Batting Stats") {
+          battingStats = await BattingStats(item.url);
+          return battingStats;
+        }
+        if (item.name === "Bowling Stats") {
+          bowlingStats = await BowlingStats(item.url);
+          return bowlingStats;
+        }
+        if (item.name === "Overall Stats") {
+          overallStats = await OverallStats(item.url);
+          return overallStats;
+        }
+      })
+    );
 
-    return playerList;
+    return {
+      fantasyPoints,
+      battingForm,
+      bowlingForm,
+      battingStats,
+      bowlingStats,
+      overallStats,
+    };
   } catch (error) {
-    console.error("Error fetching player details:", error);
-    throw error;
+    console.log(error);
+    return [];
   }
 };

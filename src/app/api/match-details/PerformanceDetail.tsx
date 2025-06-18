@@ -1,6 +1,6 @@
 import { GetHtml } from "@/lib/utils";
 
-export const BatDetails = async (url: string) => {
+export const BattingForm = async (url: string) => {
   const $ = await GetHtml(url);
   const matches: any = [];
 
@@ -39,7 +39,7 @@ export const BatDetails = async (url: string) => {
   return matches;
 };
 
-export const BowlingDetails = async (url: string) => {
+export const BowlingForm = async (url: string) => {
   const $ = await GetHtml(url);
   const bowlingStats: any = [];
 
@@ -77,7 +77,7 @@ export const BowlingDetails = async (url: string) => {
   return bowlingStats;
 };
 
-export const BattingStat = async (url: string) => {
+export const BattingStats = async (url: string) => {
   const $ = await GetHtml(url);
   const result: any = [];
 
@@ -110,7 +110,7 @@ export const BattingStat = async (url: string) => {
   return result;
 };
 
-export const BowlingStat = async (url: string) => {
+export const BowlingStats = async (url: string) => {
   const $ = await GetHtml(url);
   const result: any[] = [];
 
@@ -142,7 +142,7 @@ export const BowlingStat = async (url: string) => {
   return result;
 };
 
-export const FantasyStat = async (url: string) => {
+export const FantasyStats = async (url: string) => {
   const $ = await GetHtml(url);
 
   const container = $(
@@ -176,7 +176,7 @@ export const FantasyStat = async (url: string) => {
   return dream11Stats;
 };
 
-export const OverallStat = async (url: string) => {
+export const OverallStats = async (url: string) => {
   const match = url.match(/cricketer\/([^/]+)\//);
   const selectorName: any = match ? match[1] : null;
 
