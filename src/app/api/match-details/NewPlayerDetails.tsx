@@ -7,6 +7,7 @@ import {
   BowlingDetails,
   BowlingStat,
   FantasyStat,
+  OverallStat,
 } from "./PerformanceDetail";
 
 export const NewPlayerDetails = async () => {
@@ -59,8 +60,8 @@ export const NewPlayerDetails = async () => {
     });
     // console.log(result);
 
-    // const test = await FantasyStat(
-    //   "https://advancecricket.com/player-dream11/virat-kohli/83755737#virat-kohli-dream11-points"
+    // const test = await OverallStat(
+    //   "https://advancecricket.com/cricketer/sunil-narine/80458552"
     // );
     // console.log(test);
 

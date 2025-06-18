@@ -35,15 +35,6 @@ export const BatDetails = async (url: string) => {
       });
     }
   });
-  // matches.push({
-  //   date,
-  //   match,
-  //   run,
-  //   bo,
-  //   fours_sixes,
-  //   sr,
-  //   out,
-  // });
 
   return matches;
 };
@@ -183,4 +174,77 @@ export const FantasyStat = async (url: string) => {
   });
 
   return dream11Stats;
+};
+
+export const OverallStat = async (url: string) => {
+  const match = url.match(/cricketer\/([^/]+)\//);
+  const selectorName: any = match ? match[1] : null;
+
+  const $ = await GetHtml(url);
+
+  const playerData: any = {
+    name: selectorName,
+    batting: {},
+    bowling: {},
+    fielding: {},
+  };
+  // Dynamic selectors using the player's name
+  const battingTableSelector = `#${selectorName}-batting tbody tr`;
+  const bowlingTableSelector = `#${selectorName}-bowling tbody tr`;
+  const fieldingTableSelector = `#${selectorName}-fielding tbody tr`;
+  // Extract Batting Stats
+  $(battingTableSelector).each(function () {
+    const row = $(this);
+    const statName = row.find("td").first().text().trim();
+
+    // Skip the header rows
+    if (statName === "Outtype" || statName === "Wicket Taker") return;
+
+    const odi = row.find("td").eq(1).text().trim();
+    const t20 = row.find("td").eq(2).text().trim();
+    const ipl = row.find("td").eq(3).text().trim();
+
+    playerData.batting[statName] = {
+      ODI: odi,
+      T20: t20,
+      IPL: ipl,
+    };
+  });
+
+  // Extract Bowling Stats
+  $(bowlingTableSelector).each(function () {
+    const row = $(this);
+    const statName = row.find("td").first().text().trim();
+
+    // Skip the header rows
+    if (statName === "Batsman Type" || statName === "Wickets") return;
+
+    const odi = row.find("td").eq(1).text().trim();
+    const t20 = row.find("td").eq(2).text().trim();
+    const ipl = row.find("td").eq(3).text().trim();
+
+    playerData.bowling[statName] = {
+      ODI: odi,
+      T20: t20,
+      IPL: ipl,
+    };
+  });
+
+  // Extract Fielding Stats
+  $(fieldingTableSelector).each(function () {
+    const row = $(this);
+    const statName = row.find("td").first().text().trim();
+
+    const odi = row.find("td").eq(1).text().trim();
+    const t20 = row.find("td").eq(2).text().trim();
+    const ipl = row.find("td").eq(3).text().trim();
+
+    playerData.fielding[statName] = {
+      ODI: odi,
+      T20: t20,
+      IPL: ipl,
+    };
+  });
+
+  return playerData;
 };
