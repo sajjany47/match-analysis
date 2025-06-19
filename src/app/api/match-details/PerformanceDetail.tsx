@@ -248,3 +248,41 @@ export const OverallStats = async (url: string) => {
 
   return playerData;
 };
+
+export const StadiumStats = async (url: string) => {
+  const stadiumSlug = url.split("/stadium/")[1]?.split("/")[0];
+  const sectionId = `${stadiumSlug}-recent-matches`;
+  const $ = await GetHtml(url);
+
+  const matches: any = [];
+
+  $(`#${sectionId} table tr`).each((i, row) => {
+    if (i === 0) return; // Skip table header
+
+    const columns = $(row).find("td");
+
+    const dateLink = $(columns[0]).find("a");
+    const date = dateLink.text().trim();
+    const matchTitle = dateLink.attr("title") || "";
+    const matchUrl = dateLink.attr("href") || "";
+
+    const inn1 = $(columns[1])
+      .html()
+      ?.replace(/<br\s*\/?>/gi, " - ")
+      .trim();
+    const inn2 = $(columns[2])
+      .html()
+      ?.replace(/<br\s*\/?>/gi, " - ")
+      .trim();
+
+    matches.push({
+      date,
+      matchTitle,
+      matchUrl: `https://advancecricket.com${matchUrl}`,
+      inn1Score: inn1,
+      inn2Score: inn2,
+    });
+  });
+
+  return matches;
+};

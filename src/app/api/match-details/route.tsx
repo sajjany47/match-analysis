@@ -1,6 +1,8 @@
 import axios from "axios";
 import { NextRequest } from "next/server";
 import { NewPlayerDetails } from "./NewPlayerDetails";
+import { StadiumStats } from "./PerformanceDetail";
+import { GetPSearchList } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,6 +46,9 @@ export async function POST(request: NextRequest) {
         return playerStat;
       })
     );
+    const a: any = await GetPSearchList("MChinnaswamy", "stadium");
+    // const stadiumList = await StadiumStats(a.url);
+    // console.log(a);
     return Response.json({ data: { squadList: prepareData } }, { status: 200 });
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 });

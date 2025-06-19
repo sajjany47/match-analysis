@@ -1,6 +1,4 @@
-import { GetHtml } from "@/lib/utils";
-import axios from "axios";
-import { load } from "cheerio";
+import { GetHtml, GetPSearchList } from "@/lib/utils";
 import {
   BattingForm,
   BattingStats,
@@ -11,34 +9,10 @@ import {
 } from "./PerformanceDetail";
 
 export const NewPlayerDetails = async (name: string) => {
-  const url = "https://advancecricket.com/player-load";
-  const formData = new FormData();
-  formData.append("text", name);
   try {
-    const { data } = await axios.post(url, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    const $ = load(data);
-    const playerList: { name: string; url: string }[] = [];
+    const playerList: any = await GetPSearchList(name);
 
-    $("a[title$='Stats']").each((_, el) => {
-      const name = $(el).find("b.card-title").text().trim();
-      const href = $(el).attr("href");
-
-      if (name && href) {
-        playerList.push({
-          name,
-          url: href.startsWith("http")
-            ? href
-            : `https://advancecricket.com${href}`,
-        });
-      }
-    });
-
-    if (playerList.length === 0) {
-      throw new Error("No players found");
-    }
-    const getInfoUrl = await GetHtml(playerList[0].url);
+    const getInfoUrl = await GetHtml(playerList.url);
     const requiredNames = [
       "Dream11 Points",
       "Batting Form",
@@ -49,7 +23,7 @@ export const NewPlayerDetails = async (name: string) => {
       // "Against Teams On Stadiums",
     ];
     const result: { name: string; url: string }[] = [
-      { name: "Overall Stats", url: playerList[0].url },
+      { name: "Overall Stats", url: playerList.url },
     ];
 
     getInfoUrl(".dropdown-menu a").each((_, el) => {
@@ -104,6 +78,13 @@ export const NewPlayerDetails = async (name: string) => {
     return statData;
   } catch (error) {
     console.log(error);
-    return [];
+    return {
+      fantasyPoints: [],
+      battingForm: [],
+      bowlingForm: [],
+      battingStats: [],
+      bowlingStats: [],
+      overallStats: {},
+    };
   }
 };
