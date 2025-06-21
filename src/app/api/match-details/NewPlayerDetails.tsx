@@ -82,7 +82,7 @@ export const NewPlayerDetails = async (name: string, stadiumName: string) => {
         }
       })
     );
-    console.log(statData.stadiumStats);
+
     return statData;
   } catch (error) {
     console.log(error);

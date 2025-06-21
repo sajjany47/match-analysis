@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextRequest } from "next/server";
 import { NewPlayerDetails } from "./NewPlayerDetails";
 import { GetStadiumList } from "@/lib/utils";
-import { StadiumStats } from "./PerformanceDetail";
+import { AgaintStadiumStats, StadiumStats } from "./PerformanceDetail";
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,6 +30,10 @@ export async function POST(request: NextRequest) {
 
     const stadiumDetails: any = await GetStadiumList("eden garden");
     const stadium = await StadiumStats(stadiumDetails.url);
+    const stadiumStats = await AgaintStadiumStats(
+      "https://advancecricket.com/player-vs-teams-on-stadium/virat-kohli/83755737#virat-kohli-against-teams-on-stadiums",
+      stadiumDetails.name
+    );
 
     const prepareData = await Promise.all(
       squadList.data.data.squadSegment.map(async (item: any) => {
@@ -51,7 +55,13 @@ export async function POST(request: NextRequest) {
     );
 
     return Response.json(
-      { data: { squadList: prepareData, stadiumStats: stadium } },
+      {
+        data: {
+          squadList: prepareData,
+          stadiumStats: stadium,
+          stadium: stadiumStats,
+        },
+      },
       { status: 200 }
     );
   } catch (error: any) {

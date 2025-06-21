@@ -297,7 +297,7 @@ export const AgaintStadiumStats = async (
   const player = headingText.split(" Against")[0].trim();
   const stats: any = [];
 
-  $("table.my-specific-table tbody tr").each((i, row) => {
+  $("table.my-specific-table tbody .tsuccess").each((i, row) => {
     const cols = $(row).find("td");
 
     const stadium = $(cols[0]).text().trim();
