@@ -2,6 +2,7 @@ import axios from "axios";
 import { NextRequest } from "next/server";
 import { NewPlayerDetails } from "./NewPlayerDetails";
 import { GetStadiumList } from "@/lib/utils";
+import { StadiumStats } from "./PerformanceDetail";
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,8 +28,8 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const stadiumDetails = await GetStadiumList("MChinnaswamy");
-    console.log(stadiumDetails);
+    const stadiumDetails: any = await GetStadiumList("eden garden");
+    const stadium = await StadiumStats(stadiumDetails.url);
 
     const prepareData = await Promise.all(
       squadList.data.data.squadSegment.map(async (item: any) => {
@@ -46,7 +47,10 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    return Response.json({ data: { squadList: prepareData } }, { status: 200 });
+    return Response.json(
+      { data: { squadList: prepareData, stadiumStats: stadium } },
+      { status: 200 }
+    );
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 });
   }
