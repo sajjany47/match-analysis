@@ -1,5 +1,6 @@
 import { GetHtml, GetPSearchList } from "@/lib/utils";
 import {
+  AgaintStadiumStats,
   BattingForm,
   BattingStats,
   BowlingForm,
@@ -8,7 +9,7 @@ import {
   OverallStats,
 } from "./PerformanceDetail";
 
-export const NewPlayerDetails = async (name: string) => {
+export const NewPlayerDetails = async (name: string, stadiumName: string) => {
   try {
     const playerList: any = await GetPSearchList(name);
     const getInfoUrl = await GetHtml(playerList.url);
@@ -19,7 +20,7 @@ export const NewPlayerDetails = async (name: string) => {
       "Batting Stats",
       "Bowling Stats",
       // "Against Teams",
-      // "Against Teams On Stadiums",
+      "Against Teams On Stadiums",
     ];
     const result: { name: string; url: string }[] = [
       { name: "Overall Stats", url: playerList.url },
@@ -41,6 +42,7 @@ export const NewPlayerDetails = async (name: string) => {
       battingStats: any[];
       bowlingStats: any[];
       overallStats: any;
+      stadiumStats?: any;
     } = {
       fantasyPoints: [],
       battingForm: [],
@@ -48,6 +50,7 @@ export const NewPlayerDetails = async (name: string) => {
       battingStats: [],
       bowlingStats: [],
       overallStats: {},
+      stadiumStats: {},
     };
     await Promise.all(
       result.map(async (item) => {
@@ -70,10 +73,16 @@ export const NewPlayerDetails = async (name: string) => {
           case "Overall Stats":
             statData.overallStats = await OverallStats(item.url);
             break;
+          case "Against Teams On Stadiums":
+            statData.overallStats = await AgaintStadiumStats(
+              item.url,
+              stadiumName
+            );
+            break;
         }
       })
     );
-
+    console.log(statData.stadiumStats);
     return statData;
   } catch (error) {
     console.log(error);

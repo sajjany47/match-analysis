@@ -39,7 +39,10 @@ export async function POST(request: NextRequest) {
             : item.playingPlayers.benchPlayers;
         const playerStat: any = await Promise.all(
           mapPlayer.map(async (elm: any) => {
-            const searchPlayer = await NewPlayerDetails(elm.name);
+            const searchPlayer = await NewPlayerDetails(
+              elm.name,
+              stadiumDetails.name
+            );
             return { ...elm, ...searchPlayer };
           })
         );

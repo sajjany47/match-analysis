@@ -286,3 +286,62 @@ export const StadiumStats = async (url: string) => {
 
   return matches;
 };
+
+export const AgaintStadiumStats = async (
+  url: string,
+  filterStadium: string
+) => {
+  const $ = await GetHtml(url);
+
+  const headingText = $("h2").first().text().trim(); // Example: "Virat Kohli Against Teams On Stadiums Batting"
+  const player = headingText.split(" Against")[0].trim();
+  const stats: any = [];
+
+  $("table.my-specific-table tbody tr").each((i, row) => {
+    const cols = $(row).find("td");
+
+    const stadium = $(cols[0]).text().trim();
+
+    if (stadium.toLowerCase() === filterStadium.toLowerCase()) {
+      const team = $(cols[1]).text().trim();
+      const year = $(cols[2]).text().trim();
+      const mode = $(cols[3]).text().trim();
+      const matches = $(cols[4]).text().trim();
+      const innings = $(cols[5]).text().trim();
+      const runs = $(cols[6]).text().trim();
+      const balls = $(cols[7]).text().trim();
+      const no = $(cols[8]).text().trim();
+      const avg = $(cols[9]).text().trim();
+      const sr = $(cols[10]).text().trim();
+      const hs = $(cols[11]).text().trim();
+      const fifty = $(cols[12]).text().trim();
+      const hundred = $(cols[13]).text().trim();
+      const fours = $(cols[14]).text().trim();
+      const sixes = $(cols[15]).text().trim();
+
+      stats.push({
+        team,
+        year,
+        mode,
+        matches,
+        innings,
+        runs,
+        balls,
+        no,
+        avg,
+        sr,
+        hs,
+        fifty,
+        hundred,
+        fours,
+        sixes,
+      });
+    }
+  });
+
+  return {
+    player,
+    stadium: filterStadium,
+    stats,
+  };
+};
