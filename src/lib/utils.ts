@@ -57,19 +57,15 @@ export const GetHtml = async (url: string) => {
   const response = await axios.get(url);
   const data = response.data;
   const $ = load(data);
-
   return $;
 };
 
-export const GetPSearchList = async (searchTerm: string, type?: string) => {
+export const GetPSearchList = async (searchTerm: string) => {
   const url = "https://advancecricket.com/player-load";
   const formData = new FormData();
 
-  if (type) {
-    formData.append("stadium", type);
-  } else {
-    formData.append("text", searchTerm);
-  }
+  formData.append("text", searchTerm);
+
   try {
     const { data } = await axios.post(url, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -90,9 +86,9 @@ export const GetPSearchList = async (searchTerm: string, type?: string) => {
         });
       }
     });
-    if (type) {
-      console.log(playerList);
-    }
+    // if (type) {
+    //   console.log(playerList);
+    // }
     if (playerList.length === 0) {
       throw new Error("No players found");
     }
