@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextRequest } from "next/server";
 import { NewPlayerDetails } from "./NewPlayerDetails";
+import { GetStadiumList } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,6 +26,9 @@ export async function POST(request: NextRequest) {
         },
       }
     );
+
+    const stadiumDetails = await GetStadiumList("MChinnaswamy");
+    console.log(stadiumDetails);
 
     const prepareData = await Promise.all(
       squadList.data.data.squadSegment.map(async (item: any) => {

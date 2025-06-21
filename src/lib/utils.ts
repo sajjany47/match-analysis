@@ -101,3 +101,37 @@ export const GetPSearchList = async (searchTerm: string) => {
     return [];
   }
 };
+
+export const GetStadiumList = async (searchTerm: string) => {
+  const url = "https://advancecricket.com/player-load";
+  const formData = new FormData();
+
+  formData.append("stadium", searchTerm);
+
+  try {
+    const { data } = await axios.post(url, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    const $ = load(data);
+    const stadiums: { name: string; url: string }[] = [];
+
+    $(".row.row-cols-1.row-cols-lg-3 .col").each((index, element) => {
+      const name = $(element).find("b.card-title").text().trim();
+      const url = $(element).find("a").attr("href");
+
+      if (name && url) {
+        stadiums.push({ name, url });
+      }
+    });
+    if (stadiums.length === 0) {
+      throw new Error("No stadium found");
+    }
+    return stadiums[0]; // Return the first player found
+  } catch (error) {
+    console.error(
+      `Error fetching player search list for ${searchTerm}:`,
+      error
+    );
+    return [];
+  }
+};
