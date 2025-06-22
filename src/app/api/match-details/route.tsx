@@ -2,11 +2,7 @@ import axios from "axios";
 import { NextRequest } from "next/server";
 import { NewPlayerDetails } from "./NewPlayerDetails";
 import { GetStadiumList } from "@/lib/utils";
-import {
-  AgaintStadiumStats,
-  AgaintTeamStats,
-  StadiumStats,
-} from "./PerformanceDetail";
+import { StadiumStats } from "./PerformanceDetail";
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,34 +28,63 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const stadiumDetails: any = await GetStadiumList("eden garden");
+    const stadiumDetails: any = await GetStadiumList("Headingley");
     const stadium = await StadiumStats(stadiumDetails.url);
-    const stadiumStats = await AgaintStadiumStats(
-      "https://advancecricket.com/player-vs-teams-on-stadium/sunil-narine/80458552#sunil-narine-against-teams-on-stadiums",
-      stadiumDetails.name
-    );
 
-    const againstStadiumDetails = await AgaintTeamStats(
-      "https://advancecricket.com/player-vs-teams/virat-kohli/83755737#virat-kohli-against-teams",
-      "RSA"
-    );
+    const playerDetails = async (
+      name: string,
+      stadiumName?: string,
+      teamName?: string
+    ) => {
+      const playerData = await NewPlayerDetails(
+        name,
+        stadiumName || "",
+        teamName || ""
+      );
+      return playerData;
+    };
 
     const prepareData = await Promise.all(
       squadList.data.data.squadSegment.map(async (item: any) => {
-        const mapPlayer =
-          item.playingPlayers.length > 0
-            ? item.playingPlayers
-            : item.playingPlayers.benchPlayers;
-        const playerStat: any = await Promise.all(
-          mapPlayer.map(async (elm: any) => {
-            const searchPlayer = await NewPlayerDetails(
-              elm.name,
-              stadiumDetails.name
-            );
-            return { ...elm, ...searchPlayer };
-          })
-        );
-        return playerStat;
+        const playingPlayers = item.playingPlayers
+          ? await Promise.all(
+              item.playingPlayers.map(async (elm: any) => {
+                const playerData = await playerDetails(
+                  elm.name,
+                  stadiumDetails.name,
+                  item.shortName
+                );
+                return {
+                  ...elm,
+                  ...playerData,
+                };
+              })
+            )
+          : [];
+
+        const benchPlayers = item.benchPlayers
+          ? await Promise.all(
+              item.benchPlayers.map(async (elm: any) => {
+                const playerData = await playerDetails(
+                  elm.name,
+                  stadiumDetails.name,
+                  item.shortName
+                );
+                return {
+                  ...elm,
+                  ...playerData,
+                };
+              })
+            )
+          : [];
+
+        return {
+          flag: item.flag?.src,
+          color: item.color,
+          shortName: item.shortName,
+          playingPlayer: playingPlayers,
+          benchPlayer: benchPlayers,
+        };
       })
     );
 
@@ -68,8 +93,6 @@ export async function POST(request: NextRequest) {
         data: {
           squadList: prepareData,
           stadiumStats: stadium,
-          stadium: stadiumStats,
-          againstStadiumDetails: againstStadiumDetails,
         },
       },
       { status: 200 }

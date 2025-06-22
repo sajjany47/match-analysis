@@ -9,7 +9,11 @@ import {
   OverallStats,
 } from "./PerformanceDetail";
 
-export const NewPlayerDetails = async (name: string, stadiumName: string) => {
+export const NewPlayerDetails = async (
+  name: string,
+  stadiumName: string,
+  teamName: string
+) => {
   try {
     const playerList: any = await GetPSearchList(name);
     const getInfoUrl = await GetHtml(playerList.url);
@@ -19,7 +23,7 @@ export const NewPlayerDetails = async (name: string, stadiumName: string) => {
       "Bowling Form",
       "Batting Stats",
       "Bowling Stats",
-      // "Against Teams",
+      "Against Teams",
       "Against Teams On Stadiums",
     ];
     const result: { name: string; url: string }[] = [
@@ -43,6 +47,7 @@ export const NewPlayerDetails = async (name: string, stadiumName: string) => {
       bowlingStats: any[];
       overallStats: any;
       stadiumStats?: any;
+      againstTeamsStats?: any;
     } = {
       fantasyPoints: [],
       battingForm: [],
@@ -51,6 +56,7 @@ export const NewPlayerDetails = async (name: string, stadiumName: string) => {
       bowlingStats: [],
       overallStats: {},
       stadiumStats: {},
+      againstTeamsStats: {},
     };
     await Promise.all(
       result.map(async (item) => {
@@ -74,9 +80,15 @@ export const NewPlayerDetails = async (name: string, stadiumName: string) => {
             statData.overallStats = await OverallStats(item.url);
             break;
           case "Against Teams On Stadiums":
-            statData.overallStats = await AgaintStadiumStats(
+            statData.stadiumStats = await AgaintStadiumStats(
               item.url,
               stadiumName
+            );
+            break;
+          case "Against Teams":
+            statData.againstTeamsStats = await AgaintStadiumStats(
+              item.url,
+              teamName
             );
             break;
         }
@@ -93,6 +105,8 @@ export const NewPlayerDetails = async (name: string, stadiumName: string) => {
       battingStats: [],
       bowlingStats: [],
       overallStats: {},
+      stadiumStats: {},
+      againstTeamsStats: {},
     };
   }
 };
