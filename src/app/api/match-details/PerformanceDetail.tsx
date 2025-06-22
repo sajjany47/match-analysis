@@ -356,3 +356,72 @@ export const AgaintStadiumStats = async (
     bowlingStats,
   };
 };
+
+export const AgaintTeamStats = async (url: string, filterOpponent: string) => {
+  const $ = await GetHtml(url);
+
+  const headingText = $("div.tab-pane h2").first().text().trim();
+  const extractedPlayer = headingText.split(" Against")[0].trim();
+
+  // Dynamically get batting and bowling tab pane IDs from hrefs
+  const battingTabHref = $("a.nav-link:contains('Bat')").attr("href");
+  const bowlingTabHref = $("a.nav-link:contains('Bowl')").attr("href");
+
+  const battingStats: any[] = [];
+
+  $(`${battingTabHref} table tbody .tsuccess`).each((i, el) => {
+    const cols = $(el).find("td");
+    const stadium = $(cols[0]).text().trim();
+    if (stadium.toLowerCase() === filterOpponent.toLowerCase()) {
+      battingStats.push({
+        team: filterOpponent,
+        year: $(cols[2]).text().trim(),
+        mode: $(cols[3]).text().trim(),
+        matches: $(cols[4]).text().trim(),
+        innings: $(cols[5]).text().trim(),
+        runs: $(cols[6]).text().trim(),
+        balls: $(cols[7]).text().trim(),
+        no: $(cols[8]).text().trim(),
+        avg: $(cols[9]).text().trim(),
+        sr: $(cols[10]).text().trim(),
+        hs: $(cols[11]).text().trim(),
+        fifty: $(cols[12]).text().trim(),
+        hundred: $(cols[13]).text().trim(),
+        fours: $(cols[14]).text().trim(),
+        sixes: $(cols[15]).text().trim(),
+      });
+    }
+  });
+
+  const bowlingStats: any[] = [];
+
+  $(`${bowlingTabHref} table tbody .tsuccess`).each((i, el) => {
+    const cols = $(el).find("td");
+    const stadium = $(cols[0]).text().trim();
+    if (stadium.toLowerCase() === filterOpponent.toLowerCase()) {
+      bowlingStats.push({
+        team: filterOpponent,
+        year: $(cols[2]).text().trim(),
+        mode: $(cols[3]).text().trim(),
+        matches: $(cols[4]).text().trim(),
+        innings: $(cols[5]).text().trim(),
+        balls: $(cols[6]).text().trim(),
+        runs: $(cols[7]).text().trim(),
+        wickets: $(cols[8]).text().trim(),
+        sr: $(cols[9]).text().trim(),
+        twoWkts: $(cols[10]).text().trim(),
+        threeWkts: $(cols[11]).text().trim(),
+        fiveWkts: $(cols[12]).text().trim(),
+        econ: $(cols[13]).text().trim(),
+        avg: $(cols[14]).text().trim(),
+      });
+    }
+  });
+
+  return {
+    player: extractedPlayer,
+    againstTeams: filterOpponent,
+    battingStats,
+    bowlingStats,
+  };
+};
