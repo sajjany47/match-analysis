@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const stadiumDetails: any = await GetStadiumList("eden garden");
     const stadium = await StadiumStats(stadiumDetails.url);
     const stadiumStats = await AgaintStadiumStats(
-      "https://advancecricket.com/player-vs-teams-on-stadium/virat-kohli/83755737#virat-kohli-against-teams-on-stadiums",
+      "https://advancecricket.com/player-vs-teams-on-stadium/sunil-narine/80458552#sunil-narine-against-teams-on-stadiums",
       stadiumDetails.name
     );
 

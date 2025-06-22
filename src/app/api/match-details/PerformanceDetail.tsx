@@ -293,55 +293,66 @@ export const AgaintStadiumStats = async (
 ) => {
   const $ = await GetHtml(url);
 
-  const headingText = $("h2").first().text().trim(); // Example: "Virat Kohli Against Teams On Stadiums Batting"
-  const player = headingText.split(" Against")[0].trim();
-  const stats: any = [];
+  const headingText = $("div.tab-pane h2").first().text().trim();
+  const extractedPlayer = headingText.split(" Against")[0].trim();
 
-  $("table.my-specific-table tbody .tsuccess").each((i, row) => {
-    const cols = $(row).find("td");
+  // Dynamically get batting and bowling tab pane IDs from hrefs
+  const battingTabHref = $("a.nav-link:contains('Bat')").attr("href"); // e.g., "#virat-kohli-batting-stats"
+  const bowlingTabHref = $("a.nav-link:contains('Bowl')").attr("href"); // e.g., "#virat-kohli-bowling-stats"
 
+  const battingStats: any = [];
+  $(`${battingTabHref} table tbody .tsuccess`).each((i, el) => {
+    const cols = $(el).find("td");
     const stadium = $(cols[0]).text().trim();
-
     if (stadium.toLowerCase() === filterStadium.toLowerCase()) {
-      const team = $(cols[1]).text().trim();
-      const year = $(cols[2]).text().trim();
-      const mode = $(cols[3]).text().trim();
-      const matches = $(cols[4]).text().trim();
-      const innings = $(cols[5]).text().trim();
-      const runs = $(cols[6]).text().trim();
-      const balls = $(cols[7]).text().trim();
-      const no = $(cols[8]).text().trim();
-      const avg = $(cols[9]).text().trim();
-      const sr = $(cols[10]).text().trim();
-      const hs = $(cols[11]).text().trim();
-      const fifty = $(cols[12]).text().trim();
-      const hundred = $(cols[13]).text().trim();
-      const fours = $(cols[14]).text().trim();
-      const sixes = $(cols[15]).text().trim();
+      battingStats.push({
+        team: $(cols[1]).text().trim(),
+        year: $(cols[2]).text().trim(),
+        mode: $(cols[3]).text().trim(),
+        matches: $(cols[4]).text().trim(),
+        innings: $(cols[5]).text().trim(),
+        runs: $(cols[6]).text().trim(),
+        balls: $(cols[7]).text().trim(),
+        no: $(cols[8]).text().trim(),
+        avg: $(cols[9]).text().trim(),
+        sr: $(cols[10]).text().trim(),
+        hs: $(cols[11]).text().trim(),
+        fifty: $(cols[12]).text().trim(),
+        hundred: $(cols[13]).text().trim(),
+        fours: $(cols[14]).text().trim(),
+        sixes: $(cols[15]).text().trim(),
+      });
+    }
+  });
 
-      stats.push({
-        team,
-        year,
-        mode,
-        matches,
-        innings,
-        runs,
-        balls,
-        no,
-        avg,
-        sr,
-        hs,
-        fifty,
-        hundred,
-        fours,
-        sixes,
+  const bowlingStats: any = [];
+  $(`${bowlingTabHref} table tbody .tsuccess`).each((i, el) => {
+    const cols = $(el).find("td");
+    const stadium = $(cols[0]).text().trim();
+    if (stadium.toLowerCase() === filterStadium.toLowerCase()) {
+      bowlingStats.push({
+        team: $(cols[1]).text().trim(),
+        year: $(cols[2]).text().trim(),
+        mode: $(cols[3]).text().trim(),
+        matches: $(cols[4]).text().trim(),
+        innings: $(cols[5]).text().trim(),
+        balls: $(cols[6]).text().trim(),
+        runs: $(cols[7]).text().trim(),
+        wickets: $(cols[8]).text().trim(),
+        sr: $(cols[9]).text().trim(),
+        twoWkts: $(cols[10]).text().trim(),
+        threeWkts: $(cols[11]).text().trim(),
+        fiveWkts: $(cols[12]).text().trim(),
+        econ: $(cols[13]).text().trim(),
+        avg: $(cols[14]).text().trim(),
       });
     }
   });
 
   return {
-    player,
+    player: extractedPlayer,
     stadium: filterStadium,
-    stats,
+    battingStats,
+    bowlingStats,
   };
 };
