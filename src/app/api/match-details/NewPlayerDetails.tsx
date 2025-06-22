@@ -1,6 +1,7 @@
 import { GetHtml, GetPSearchList } from "@/lib/utils";
 import {
   AgaintStadiumStats,
+  AgaintTeamStats,
   BattingForm,
   BattingStats,
   BowlingForm,
@@ -86,7 +87,7 @@ export const NewPlayerDetails = async (
             );
             break;
           case "Against Teams":
-            statData.againstTeamsStats = await AgaintStadiumStats(
+            statData.againstTeamsStats = await AgaintTeamStats(
               item.url,
               teamName
             );

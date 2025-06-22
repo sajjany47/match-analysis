@@ -45,14 +45,15 @@ export async function POST(request: NextRequest) {
     };
 
     const prepareData = await Promise.all(
-      squadList.data.data.squadSegment.map(async (item: any) => {
+      squadList.data.data.squadSegment.map(async (item: any, index: number) => {
         const playingPlayers = item.playingPlayers
           ? await Promise.all(
               item.playingPlayers.map(async (elm: any) => {
                 const playerData = await playerDetails(
                   elm.name,
                   stadiumDetails.name,
-                  item.shortName
+                  squadList.data.data.squadSegment[index === 0 ? 1 : 0]
+                    .shortName
                 );
                 return {
                   ...elm,
