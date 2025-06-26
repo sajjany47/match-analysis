@@ -54,24 +54,16 @@ interface Navbar1Props {
 
 const Navbar = ({
   logo = {
-    url: "https://www.shadcnblocks.com",
+    url: "/",
     src: "https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg",
     alt: "logo",
     title: "SportPredict",
   },
   menu = [
-    { title: "Home", url: "#" },
+    { title: "Home", url: "/" },
     {
       title: "Matches",
       url: "/matches",
-      //   items: [
-      //     {
-      //       title: "Blog",
-      //       description: "The latest industry news, updates, and info",
-      //       icon: <Book className="size-5 shrink-0" />,
-      //       url: "#",
-      //     },
-      //   ],
     },
     {
       title: "About",
@@ -82,13 +74,13 @@ const Navbar = ({
       url: "#",
     },
     {
-      title: "Contact Us",
-      url: "#",
+      title: "Support",
+      url: "/support",
     },
   ],
   auth = {
-    login: { title: "Login", url: "#" },
-    signup: { title: "Sign up", url: "#" },
+    login: { title: "Login", url: "/auth/login" },
+    signup: { title: "Sign up", url: "/auth/register" },
   },
 }: Navbar1Props) => {
   return (
